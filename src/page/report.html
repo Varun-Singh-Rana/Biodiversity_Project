@@ -10,7 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../css/fielddata.css" />
+    <link rel="stylesheet" href="../css/report.css" />
   </head>
   <body>
     <div class="app-shell">
@@ -50,7 +50,404 @@
         </div>
       </header>
 
-      <main class="content"></main>
+      <main class="content">
+        <section class="page-intro">
+          <div class="intro-copy">
+            <h1>Reports &amp; Documentation</h1>
+            <p>
+              Download and filter conservation reports, analysis, and field data
+              for Uttarakhand forest monitoring initiatives.
+            </p>
+          </div>
+          <button class="primary" type="button">
+            <span class="button-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20">
+                <path d="M10 3v10m0 0 3.5-3.5M10 13 6.5 9.5M4 15h12M6 3h8" />
+              </svg>
+            </span>
+            Generate Custom Report
+          </button>
+        </section>
+
+        <section class="quick-actions" aria-label="Quick report downloads">
+          <article class="action-card">
+            <div class="action-icon action-icon--forest" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 3 6 14h5v5l2 2v-7h5Z" />
+              </svg>
+            </div>
+            <div class="action-body">
+              <h2>Today&apos;s Field Data Summary</h2>
+              <p>Daily compiled metrics from ranger submissions.</p>
+              <div class="action-footer">
+                <button type="button" class="download-btn">
+                  <span aria-hidden="true">
+                    <svg viewBox="0 0 20 20">
+                      <path d="M10 2v9m0 0 3-3m-3 3-3-3m-4 7h14" />
+                    </svg>
+                  </span>
+                  Download
+                </button>
+              </div>
+            </div>
+          </article>
+          <article class="action-card">
+            <div class="action-icon action-icon--alert" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 4 2 20h20Zm0 5v4m0 3h.01" />
+              </svg>
+            </div>
+            <div class="action-body">
+              <h2>Weekly Alert Report</h2>
+              <p>Summary of incident alerts and mitigation status.</p>
+              <div class="action-footer">
+                <button type="button" class="download-btn">
+                  <span aria-hidden="true">
+                    <svg viewBox="0 0 20 20">
+                      <path d="M10 2v9m0 0 3-3m-3 3-3-3m-4 7h14" />
+                    </svg>
+                  </span>
+                  Download
+                </button>
+              </div>
+            </div>
+          </article>
+          <article class="action-card">
+            <div class="action-icon action-icon--species" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M5 19c3-6 8-6 11-12 1-2-1-4-3-3-4 2-8 9-10 15Zm8 0c1-4 5-6 6-9 .7-1.8-.9-3.2-2.4-2.4-2.7 1.4-5.1 6.3-5.6 11.4Z"
+                />
+              </svg>
+            </div>
+            <div class="action-body">
+              <h2>Species Sighting Log</h2>
+              <p>Catalog of all recorded wildlife observations.</p>
+              <div class="action-footer">
+                <button type="button" class="download-btn">
+                  <span aria-hidden="true">
+                    <svg viewBox="0 0 20 20">
+                      <path d="M10 2v9m0 0 3-3m-3 3-3-3m-4 7h14" />
+                    </svg>
+                  </span>
+                  Download
+                </button>
+              </div>
+            </div>
+          </article>
+          <article class="action-card">
+            <div class="action-icon action-icon--risk" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 2a8 8 0 0 0-8 8c0 4.4 4 8.9 7 11l1 1c3-2.1 7-6.6 7-12a8 8 0 0 0-7-8Zm0 11.5A3.5 3.5 0 1 1 15.5 10 3.5 3.5 0 0 1 12 13.5Z"
+                />
+              </svg>
+            </div>
+            <div class="action-body">
+              <h2>Risk Zone Status</h2>
+              <p>Current risk tiering across districts and reserves.</p>
+              <div class="action-footer">
+                <button type="button" class="download-btn">
+                  <span aria-hidden="true">
+                    <svg viewBox="0 0 20 20">
+                      <path d="M10 2v9m0 0 3-3m-3 3-3-3m-4 7h14" />
+                    </svg>
+                  </span>
+                  Download
+                </button>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="form-card report-filter" aria-labelledby="filter-title">
+          <div class="form-card__head">
+            <div>
+              <h2 id="filter-title">Filter Reports</h2>
+              <p>
+                Apply filters to find specific reports by region, species, or
+                date range.
+              </p>
+            </div>
+          </div>
+          <form class="filter-form" action="#" method="get">
+            <div class="form-section">
+              <div class="section-header">
+                <div class="section-title">
+                  <span class="section-icon" aria-hidden="true">
+                    <svg viewBox="0 0 20 20">
+                      <path d="M3 4h14M5 4v3.5l4 5.5v3l2 1v-4l4-5.5V4" />
+                    </svg>
+                  </span>
+                  <h3>Report Filters</h3>
+                  <p>Refine listings</p>
+                </div>
+              </div>
+              <div class="field-grid field-grid--four">
+                <label class="field">
+                  <span>Report Type</span>
+                  <select name="report-type">
+                    <option>All Types</option>
+                    <option>Biodiversity</option>
+                    <option>Incident</option>
+                    <option>Climate</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>Region / District</span>
+                  <select name="region">
+                    <option>All Regions</option>
+                    <option>Chamoli</option>
+                    <option>Nainital</option>
+                    <option>Uttarkashi</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>Species Focus</span>
+                  <select name="species">
+                    <option>All Species</option>
+                    <option>Snow Leopard</option>
+                    <option>Asian Elephant</option>
+                    <option>Himalayan Monal</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>Date Range</span>
+                  <input
+                    type="text"
+                    name="date-range"
+                    placeholder="Select dates"
+                  />
+                </label>
+              </div>
+              <div class="field-grid">
+                <label class="field">
+                  <span>Search</span>
+                  <input
+                    type="search"
+                    name="query"
+                    placeholder="Search reports by keyword"
+                  />
+                </label>
+              </div>
+              <div class="filter-actions">
+                <button type="submit" class="primary">Apply Filters</button>
+                <button type="reset" class="ghost">Reset</button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <section class="reports-card" aria-labelledby="available-reports-title">
+          <header class="reports-card__head">
+            <div>
+              <h2 id="available-reports-title">Available Reports</h2>
+              <p>Showing 6 reports | Last updated: Oct 24, 2025</p>
+            </div>
+            <a class="link" href="#">View archive</a>
+          </header>
+          <div class="table-scroll">
+            <table class="reports-table">
+              <thead>
+                <tr>
+                  <th>Report ID</th>
+                  <th>Title</th>
+                  <th>Type</th>
+                  <th>Region</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Size</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>RPT-2025-001</td>
+                  <td>Monthly Biodiversity Assessment - October 2025</td>
+                  <td><span class="chip chip--success">Biodiversity</span></td>
+                  <td>All Districts</td>
+                  <td>Oct 24, 2025</td>
+                  <td>
+                    <span class="status-pill status-pill--synced"
+                      >Available</span
+                    >
+                  </td>
+                  <td>2.4 MB</td>
+                  <td class="table-actions">
+                    <button type="button" class="ghost ghost--compact">
+                      View
+                    </button>
+                    <button type="button" class="primary primary--compact">
+                      PDF
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>RPT-2025-002</td>
+                  <td>Disaster Risk Analysis - Q4 2025</td>
+                  <td><span class="chip chip--danger">Disaster Risk</span></td>
+                  <td>Chamoli, Uttarkashi</td>
+                  <td>Oct 15, 2025</td>
+                  <td>
+                    <span class="status-pill status-pill--synced"
+                      >Available</span
+                    >
+                  </td>
+                  <td>3.1 MB</td>
+                  <td class="table-actions">
+                    <button type="button" class="ghost ghost--compact">
+                      View
+                    </button>
+                    <button type="button" class="primary primary--compact">
+                      PDF
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>RPT-2025-003</td>
+                  <td>Tiger Population Survey - Jim Corbett NP</td>
+                  <td><span class="chip chip--success">Species</span></td>
+                  <td>Jim Corbett</td>
+                  <td>Oct 10, 2025</td>
+                  <td>
+                    <span class="status-pill status-pill--synced"
+                      >Available</span
+                    >
+                  </td>
+                  <td>1.8 MB</td>
+                  <td class="table-actions">
+                    <button type="button" class="ghost ghost--compact">
+                      View
+                    </button>
+                    <button type="button" class="primary primary--compact">
+                      PDF
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>RPT-2025-004</td>
+                  <td>Forest Cover Change Detection - September</td>
+                  <td><span class="chip">Vegetation</span></td>
+                  <td>All Districts</td>
+                  <td>Oct 1, 2025</td>
+                  <td>
+                    <span class="status-pill status-pill--pending"
+                      >Processing</span
+                    >
+                  </td>
+                  <td>4.2 MB</td>
+                  <td class="table-actions">
+                    <button type="button" class="ghost ghost--compact">
+                      View
+                    </button>
+                    <button type="button" class="primary primary--compact">
+                      PDF
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>RPT-2025-005</td>
+                  <td>Human-Wildlife Conflict Report</td>
+                  <td><span class="chip chip--danger">Incident</span></td>
+                  <td>Multiple</td>
+                  <td>Sep 28, 2025</td>
+                  <td>
+                    <span class="status-pill status-pill--synced"
+                      >Available</span
+                    >
+                  </td>
+                  <td>1.5 MB</td>
+                  <td class="table-actions">
+                    <button type="button" class="ghost ghost--compact">
+                      View
+                    </button>
+                    <button type="button" class="primary primary--compact">
+                      PDF
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>RPT-2025-006</td>
+                  <td>Annual Conservation Progress Report</td>
+                  <td><span class="chip chip--success">Biodiversity</span></td>
+                  <td>All Districts</td>
+                  <td>Sep 15, 2025</td>
+                  <td>
+                    <span class="status-pill status-pill--synced"
+                      >Available</span
+                    >
+                  </td>
+                  <td>5.8 MB</td>
+                  <td class="table-actions">
+                    <button type="button" class="ghost ghost--compact">
+                      View
+                    </button>
+                    <button type="button" class="primary primary--compact">
+                      PDF
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="summary-grid" aria-label="Report statistics">
+          <article class="summary-card">
+            <span class="summary-label">Total Reports Generated</span>
+            <strong class="summary-value">284</strong>
+            <span class="summary-meta">This year</span>
+          </article>
+          <article class="summary-card">
+            <span class="summary-label">Most Downloaded</span>
+            <strong class="summary-value">Biodiversity Reports</strong>
+            <span class="summary-meta">1,247 downloads</span>
+          </article>
+          <article class="summary-card">
+            <span class="summary-label">Recent Activity</span>
+            <strong class="summary-value">23</strong>
+            <span class="summary-meta">New reports in last 7 days</span>
+          </article>
+          <article class="summary-card">
+            <span class="summary-label">Pending Publications</span>
+            <strong class="summary-value">6</strong>
+            <span class="summary-meta">Awaiting review</span>
+          </article>
+        </section>
+
+        <section class="export-card" aria-labelledby="bulk-export-title">
+          <header class="export-card__head">
+            <div>
+              <h2 id="bulk-export-title">Bulk Export Options</h2>
+              <p>Download multiple reports at once in your preferred format.</p>
+            </div>
+            <div class="export-actions">
+              <button type="button" class="primary primary--compact">
+                Export All as ZIP
+              </button>
+              <button type="button" class="ghost ghost--compact">
+                Export Filtered Results
+              </button>
+              <button type="button" class="ghost ghost--compact">
+                Generate Monthly Compilation
+              </button>
+              <button type="button" class="ghost ghost--compact">
+                Export to Excel
+              </button>
+            </div>
+          </header>
+          <div class="export-body">
+            <span class="export-title">Report Formats Available:</span>
+            <div class="tag-list">
+              <span class="tag tag--filled">PDF</span>
+              <span class="tag tag--filled">Excel (xlsx)</span>
+              <span class="tag tag--filled">CSV</span>
+              <span class="tag tag--filled">JSON (API)</span>
+              <span class="tag tag--filled">Shapefile (GIS)</span>
+            </div>
+          </div>
+        </section>
+      </main>
 
       <footer class="site-footer">
         <div class="footer-columns">
@@ -74,6 +471,6 @@
       </footer>
     </div>
 
-    <script src="../js/fielddata.js" defer></script>
+    <script src="../js/report.js" defer></script>
   </body>
 </html>

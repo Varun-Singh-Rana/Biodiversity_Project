@@ -50,7 +50,230 @@
         </div>
       </header>
 
-      <main class="content"></main>
+      <main class="content">
+        <section class="quick-actions" aria-label="Field actions">
+          <article class="action-card">
+            <div class="action-icon" aria-hidden="true">📷</div>
+            <div class="action-body">
+              <h2>Add New Sighting</h2>
+              <p>Log wildlife activity with GPS metadata and media evidence.</p>
+            </div>
+            <button type="button" class="primary">Start</button>
+          </article>
+          <article class="action-card">
+            <div class="action-icon" aria-hidden="true">⚠️</div>
+            <div class="action-body">
+              <h2>Log Disaster Alert</h2>
+              <p>Capture emergencies for rapid coordination and follow-up.</p>
+            </div>
+            <button type="button" class="primary">Report</button>
+          </article>
+          <article class="action-card">
+            <div class="action-icon" aria-hidden="true">✅</div>
+            <div class="action-body">
+              <h2>Mark Safe Zone</h2>
+              <p>Tag areas cleared by field teams for public notification.</p>
+            </div>
+            <button type="button" class="primary">Update</button>
+          </article>
+        </section>
+
+        <section class="form-card" aria-label="Wildlife sighting report">
+          <header class="form-card__head">
+            <div>
+              <h1>Wildlife Sighting Report</h1>
+              <p>
+                Log wildlife observations and environmental data from the field.
+              </p>
+            </div>
+            <div class="status-chip status-chip--online">Auto-Sync Enabled</div>
+          </header>
+
+          <section class="form-section" aria-label="GPS location">
+            <header class="section-header">
+              <div class="section-title">
+                <span class="section-icon" aria-hidden="true">📍</span>
+                <div>
+                  <h2>GPS Location</h2>
+                  <p>Coordinates captured from device sensors.</p>
+                </div>
+              </div>
+              <button type="button" class="secondary">Auto-Tag Location</button>
+            </header>
+            <div class="field-grid field-grid--two">
+              <label class="field">
+                <span>Latitude</span>
+                <input type="text" placeholder="Auto-detected" readonly />
+              </label>
+              <label class="field">
+                <span>Longitude</span>
+                <input type="text" placeholder="Auto-detected" readonly />
+              </label>
+            </div>
+            <p class="field-help">Altitude: 2,450m | Accuracy: ±5m</p>
+          </section>
+
+          <section class="form-section" aria-label="Observation details">
+            <div class="field-grid field-grid--four">
+              <label class="field">
+                <span>Observation Category</span>
+                <select>
+                  <option>Select category</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Species / Subject</span>
+                <input type="text" placeholder="Select or type" />
+              </label>
+              <label class="field">
+                <span>Age Group</span>
+                <select>
+                  <option>Select</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Observed Behavior</span>
+                <select>
+                  <option>Select</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Individual Count</span>
+                <input type="number" min="0" placeholder="e.g., 1" />
+              </label>
+              <label class="field">
+                <span>Weather Condition</span>
+                <select>
+                  <option>Select</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Temperature (°C)</span>
+                <input type="number" placeholder="e.g., 18" />
+              </label>
+              <label class="field">
+                <span>Visibility</span>
+                <select>
+                  <option>Select</option>
+                </select>
+              </label>
+            </div>
+            <label class="field field--textarea">
+              <span>Detailed Observations</span>
+              <textarea
+                rows="4"
+                placeholder="Enter observations, habitat conditions, human activity, or other relevant information..."
+              ></textarea>
+              <div class="field-meta">Character count: 0 / 2000</div>
+            </label>
+          </section>
+
+          <section class="form-section" aria-label="Photo evidence">
+            <header class="section-header">
+              <div class="section-title">
+                <span class="section-icon" aria-hidden="true">🖼️</span>
+                <h2>Photo Evidence</h2>
+              </div>
+            </header>
+            <div class="upload-box" role="group" aria-label="Upload options">
+              <div class="upload-drop">
+                <p class="upload-instruction">
+                  Click to upload or drag and drop
+                </p>
+                <p class="upload-hint">
+                  Supports: JPG, PNG, HEIC (Max 10MB per file)
+                </p>
+                <p class="upload-meta">
+                  Photos compress automatically when offline.
+                </p>
+              </div>
+              <div class="upload-actions">
+                <button type="button" class="secondary">Take Photo</button>
+                <button type="button" class="secondary">
+                  Upload from Gallery
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section class="form-section" aria-label="Priority and tags">
+            <div class="field-group">
+              <h3>Priority Level</h3>
+              <div class="chip-group" role="group">
+                <button type="button" class="chip">Routine</button>
+                <button type="button" class="chip chip--active chip--success">
+                  Important
+                </button>
+                <button type="button" class="chip chip--danger">Urgent</button>
+              </div>
+            </div>
+            <div class="field-group">
+              <h3>Additional Tags</h3>
+              <div class="tag-list">
+                <button type="button" class="tag">Endangered Species</button>
+                <button type="button" class="tag">
+                  Human-Wildlife Conflict
+                </button>
+                <button type="button" class="tag">Habitat Degradation</button>
+                <button type="button" class="tag">Research Priority</button>
+                <button type="button" class="tag tag--outline">
+                  + Add Custom Tag
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section class="form-actions" aria-label="Submission controls">
+            <div class="action-buttons">
+              <button type="submit" class="primary primary--full">
+                Submit Report
+              </button>
+              <button type="button" class="secondary">Save as Draft</button>
+              <button type="button" class="ghost">Clear Form</button>
+            </div>
+            <div class="sync-status">
+              <span class="status-dot status-dot--success"></span>
+              <span
+                >Offline Mode Active — data stored locally until connection
+                restores.</span
+              >
+            </div>
+          </section>
+        </section>
+
+        <section class="recent-card" aria-label="Recent field entries">
+          <header class="recent-card__head">
+            <div>
+              <h2>Recent Field Entries</h2>
+              <p>Your last 5 submissions</p>
+            </div>
+            <a class="link" href="#">View all</a>
+          </header>
+          <ul class="recent-list">
+            <li>
+              <div>
+                <h3>Bengal Tiger</h3>
+                <p>Jim Corbett NP • 2 hours ago</p>
+              </div>
+              <span class="status-pill status-pill--synced">Synced</span>
+            </li>
+            <li>
+              <div>
+                <h3>Snow Leopard</h3>
+                <p>Nanda Devi • 5 hours ago</p>
+              </div>
+              <span class="status-pill status-pill--pending">Pending</span>
+            </li>
+            <li>
+              <div>
+                <h3>Forest Fire Alert</h3>
+                <p>Tehri Range • 1 day ago</p>
+              </div>
+              <span class="status-pill status-pill--synced">Synced</span>
+            </li>
+          </ul>
+        </section>
+      </main>
 
       <footer class="site-footer">
         <div class="footer-columns">
