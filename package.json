@@ -12,6 +12,9 @@
     "type": "git",
     "url": "git+https://github.com/Varun-Singh-Rana/Biodiversity_project.git"
   },
+  "dependencies": {
+    "pg": "^8.12.0"
+  },
   "devDependencies": {
     "electron": "latest",
     "electron-builder": "latest"

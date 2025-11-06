@@ -1,13 +1,16 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
+const { initDatabase, saveLoginSubmission, closeDatabase } = require("./db");
 
-function createWindow() {
-  const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+let mainWindow;
+
+async function createWindow() {
+  mainWindow = new BrowserWindow({
+    width: 1920,
+    height: 1080,
     minWidth: 900,
     minHeight: 600,
-    icon: path.join(__dirname, "src/assets/logo.ico"),
+    icon: path.join(__dirname, "../src/assets/logo.ico"),
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
@@ -20,14 +23,36 @@ function createWindow() {
     show: false,
   });
 
-  mainWindow.loadFile(path.join("src/page/dash.html"));
+  mainWindow.once("ready-to-show", () => {
+    mainWindow.show();
+  });
+
+  await mainWindow.loadFile(path.join(__dirname, "../src/page/dashboard.html"));
 
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
 }
 
-app.on("ready", createWindow);
+app.whenReady().then(async () => {
+  try {
+    await initDatabase();
+  } catch (error) {
+    console.error("[database] initialization failed:", error);
+  }
+
+  await createWindow();
+});
+
+ipcMain.handle("login:submit", async (_event, payload) => {
+  try {
+    const result = await saveLoginSubmission(payload);
+    return { ok: true, data: result };
+  } catch (error) {
+    console.error("[database] failed to save login submission:", error);
+    return { ok: false, error: error.message };
+  }
+});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -35,8 +60,12 @@ app.on("window-all-closed", () => {
   }
 });
 
+app.on("before-quit", () => {
+  closeDatabase();
+});
+
 app.on("activate", () => {
-  if (mainWindow === null) {
+  if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
 });

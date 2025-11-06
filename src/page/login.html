@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoWatch Uttarakhand | Secure Access Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/login.css" />
+    <script defer src="../js/login.js"></script>
+  </head>
+  <body>
+    <main class="login-layout">
+      <section class="info-panel" aria-label="EcoWatch overview">
+        <div class="brand-card">
+          <div class="brand-icon" aria-hidden="true">
+            <span class="icon-tree"></span>
+          </div>
+          <h1>EcoWatch Uttarakhand</h1>
+          <p class="brand-subtitle">Forest & Wildlife Monitoring System</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card__header">
+            <div class="shield-icon" aria-hidden="true"></div>
+            <div>
+              <p class="info-eyebrow">Developed under</p>
+              <p class="info-heading">
+                Ministry of Environment, Forest & Climate Change
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <h2>Empowering conservation through</h2>
+          <ul class="feature-list">
+            <li>
+              <span class="dot" aria-hidden="true"></span>
+              Real-time biodiversity monitoring
+            </li>
+            <li>
+              <span class="dot" aria-hidden="true"></span>
+              AI-powered disaster prediction
+            </li>
+            <li>
+              <span class="dot" aria-hidden="true"></span>
+              Field data collaboration
+            </li>
+          </ul>
+        </div>
+
+        <div class="goi-card">
+          <div class="goi-logo" aria-hidden="true">GOI</div>
+          <div>
+            <p>Government of India</p>
+            <p>Digital India Initiative</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="form-panel" aria-label="Secure Access Portal">
+        <div class="form-card">
+          <header>
+            <h2>Secure Access Portal</h2>
+            <p class="tagline">
+              Login with your official credentials to access the monitoring
+              system
+            </p>
+          </header>
+
+          <div class="mode-toggle" role="tablist" aria-label="Access mode">
+            <button
+              type="button"
+              class="toggle-btn"
+              data-mode-toggle="department"
+              role="tab"
+              aria-selected="false"
+            >
+              Department ID
+            </button>
+            <button
+              type="button"
+              class="toggle-btn active"
+              data-mode-toggle="guest"
+              role="tab"
+              aria-selected="true"
+            >
+              Guest Researcher
+            </button>
+          </div>
+
+          <form id="access-form" novalidate>
+            <input type="hidden" name="mode" value="guest" />
+
+            <div class="form-group" data-section="common">
+              <label for="departmentId">Department ID</label>
+              <input
+                id="departmentId"
+                name="departmentId"
+                type="text"
+                autocomplete="off"
+                placeholder="e.g., MOEF-UK-2024-001"
+                required
+              />
+            </div>
+
+            <div class="form-group" data-section="guest">
+              <label for="email">Email Address</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                placeholder="researcher@institution.edu"
+              />
+            </div>
+
+            <div class="form-group" data-section="guest">
+              <label for="institution">Institution/Organization</label>
+              <input
+                id="institution"
+                name="institution"
+                type="text"
+                autocomplete="organization"
+                placeholder="University or Research Institute"
+              />
+            </div>
+
+            <div class="form-group" data-section="guest">
+              <label for="accessCode">Guest Access Code</label>
+              <input
+                id="accessCode"
+                name="accessCode"
+                type="text"
+                placeholder="Provided by administrator"
+              />
+            </div>
+
+            <div class="form-group hidden" data-section="department">
+              <label for="password">Password</label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="Enter your password"
+              />
+            </div>
+
+            <div class="form-group hidden" data-section="department">
+              <label for="otp">OTP (if enabled)</label>
+              <input
+                id="otp"
+                name="otp"
+                type="text"
+                inputmode="numeric"
+                pattern="\d{6}"
+                maxlength="6"
+                placeholder="6-digit OTP"
+              />
+            </div>
+
+            <div
+              id="form-feedback"
+              class="form-feedback"
+              role="alert"
+              aria-live="polite"
+            ></div>
+
+            <button type="submit" class="submit-btn">
+              Request Guest Access
+            </button>
+          </form>
+
+          <footer class="form-footer">
+            <p>
+              Need help? Contact:
+              <a href="mailto:ecowatch-support@gov.in"
+                >ecowatch-support@gov.in</a
+              >
+            </p>
+            <p>Compliant with UX4G &amp; GIGW Standards</p>
+          </footer>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

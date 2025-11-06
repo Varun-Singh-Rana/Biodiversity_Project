@@ -3,68 +3,79 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EcoWatch Uttarakhand |</title>
+    <title>EcoWatch Uttarakhand | AI Predictions</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../css/" />
+    <link rel="stylesheet" href="../css/fielddata.css" />
   </head>
   <body>
-    <header class="topbar">
-      <div class="brand">
-        <span class="brand-icon" aria-hidden="true">&#128276;</span>
-        <div class="brand-text">
-          <span class="brand-title">EcoWatch Uttarakhand</span>
-          <span class="brand-subtitle"
-            >Ministry of Environment, Forest &amp; Climate Change</span
+    <div class="app-shell">
+      <header class="top-nav">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M20.9 6.4 12 2 3.1 6.4a1 1 0 0 0-.55.9v9.4a1 1 0 0 0 .55.9L12 22l8.9-4.4a1 1 0 0 0 .55-.9V7.3a1 1 0 0 0-.55-.9ZM12 19.7l-6.9-3.4V8.1L12 4.7l6.9 3.4v8.2Z"
+              />
+              <path
+                d="M12 7.5a4.25 4.25 0 0 0-4.25 4.25c0 3.2 4.25 6.05 4.25 6.05s4.25-2.85 4.25-6.05A4.25 4.25 0 0 0 12 7.5Zm0 6.13a1.88 1.88 0 1 1 1.87-1.88A1.88 1.88 0 0 1 12 13.63Z"
+              />
+            </svg>
+          </div>
+          <div class="brand-copy">
+            <span class="brand-name">EcoWatch Uttarakhand</span>
+            <span class="brand-tagline"
+              >Ministry of Environment, Forest &amp; Climate Change</span
+            >
+          </div>
+        </div>
+        <nav class="main-nav" aria-label="Primary">
+          <a class="nav-item" href="dashboard.html">Dashboard</a>
+          <a class="nav-item" href="fielddata.html">Field Data</a>
+          <a class="nav-item active" href="aipredictions.html"
+            >AI Predictions</a
           >
+          <a class="nav-item" href="report.html">Reports</a>
+          <a class="nav-item" href="setting.html">Settings</a>
+        </nav>
+        <div class="user-area">
+          <div class="user-meta">
+            <span class="user-name">Varun Rana</span>
+            <span class="user-role">Dev</span>
+          </div>
+          <div class="user-avatar" aria-hidden="true">VR</div>
+          <button class="secondary" type="button">Logout</button>
         </div>
-      </div>
-      <nav class="main-nav" aria-label="Primary">
-        <a href="#" class="nav-link" href="dashboard.html">Dashboard</a>
-        <a href="#" class="nav-link" href="fielddata.html">Field Data</a>
-        <a href="#" class="nav-link is-active" href="aipredictions.html"
-          >AI Predictions</a
-        >
-        <a href="#" class="nav-link" href="report.html">Reports</a>
-        <a href="#" class="nav-link" href="setting.html">Settings</a>
-      </nav>
-      <div class="user-wrap">
-        <div class="user-meta">
-          <span class="user-name">Varun Singh Rana</span>
-          <span class="user-role">Forest Officer</span>
-        </div>
-        <span class="user-avatar" aria-hidden="true">VR</span>
-        <button class="ghost-btn" type="button">Logout</button>
-      </div>
-    </header>
+      </header>
 
-    <footer class="site-footer" aria-label="Footer">
-      <div class="footer-columns">
-        <div>
-          <h3>EcoWatch Uttarakhand</h3>
-          <p>A Digital India Initiative</p>
+      <main class="content"></main>
+
+      <footer class="site-footer">
+        <div class="footer-columns">
+          <div class="footer-column">
+            <h3>EcoWatch Uttarakhand</h3>
+            <p>A Digital India Initiative</p>
+          </div>
+          <div class="footer-column">
+            <h3>Compliance</h3>
+            <p>UX4G &amp; GIGW Compliant<br />WCAG 2.1 AA Accessible</p>
+          </div>
+          <div class="footer-column">
+            <h3>Support</h3>
+            <p>Email: ecowatch-support@gov.in<br />Helpline: 1800-XXX-XXXX</p>
+          </div>
         </div>
-        <div>
-          <h3>Compliance</h3>
-          <p>UX4G &amp; GIGW Compliant<br />WCAG 2.1 AA Accessible</p>
-        </div>
-        <div>
-          <h3>Support</h3>
-          <p>Email: ecowatch-support@gov.in<br />Helpline: 1800-XXX-XXXX</p>
-        </div>
-      </div>
-      <div class="footer-meta">
-        <small
-          >© 2025 Ministry of Environment, Forest &amp; Climate Change,
-          Government of India</small
-        >
-        <small>All Rights Reserved | Version 2.4.1</small>
-      </div>
-    </footer>
-    <script src="../js/"></script>
+        <p class="footer-meta">
+          © 2025 Ministry of Environment, Forest &amp; Climate Change,
+          Government of India<br />All Rights Reserved | Version 2.4.1
+        </p>
+      </footer>
+    </div>
+
+    <script src="../js/fielddata.js" defer></script>
   </body>
 </html>

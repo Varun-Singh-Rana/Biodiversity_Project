@@ -34,18 +34,18 @@
           </div>
         </div>
         <nav class="main-nav" aria-label="Primary">
-          <button class="nav-item active" type="button">Dashboard</button>
-          <button class="nav-item" type="button">Field Data</button>
-          <button class="nav-item" type="button">AI Predictions</button>
-          <button class="nav-item" type="button">Reports</button>
-          <button class="nav-item" type="button">Settings</button>
+          <a class="nav-item active" href="dashboard.html">Dashboard</a>
+          <a class="nav-item" href="fielddata.html">Field Data</a>
+          <a class="nav-item" href="aipredictions.html">AI Predictions</a>
+          <a class="nav-item" href="report.html">Reports</a>
+          <a class="nav-item" href="setting.html">Settings</a>
         </nav>
         <div class="user-area">
           <div class="user-meta">
-            <span class="user-name">Dr. Rajesh Kumar</span>
-            <span class="user-role">Forest Officer</span>
+            <span class="user-name">Varun Rana</span>
+            <span class="user-role">Dev</span>
           </div>
-          <div class="user-avatar" aria-hidden="true">RK</div>
+          <div class="user-avatar" aria-hidden="true">VR</div>
           <button class="secondary" type="button">Logout</button>
         </div>
       </header>
@@ -128,18 +128,39 @@
               </div>
             </header>
             <div class="map-surface">
-              <div class="map-tooltip">
-                <h3>Hover over zones for details</h3>
-                <p>
-                  Click markers to view wildlife sightings and environmental
-                  data
-                </p>
-              </div>
               <div class="map-image">
                 <img
                   src="../assets/uttarakhand-map.png"
                   alt="Illustrated map of Uttarakhand forest zones"
                 />
+                <!-- markers overlay -->
+                <div class="map-markers">
+                  <button
+                    class="marker marker--safe"
+                    style="--x: 18%; --y: 30%"
+                    aria-label="Protected zone"
+                  ></button>
+                  <button
+                    class="marker marker--danger"
+                    style="--x: 36%; --y: 38%"
+                    aria-label="High risk area"
+                  ></button>
+                  <button
+                    class="marker marker--medium"
+                    style="--x: 57%; --y: 52%"
+                    aria-label="Medium risk area"
+                  ></button>
+                  <button
+                    class="marker marker--safe"
+                    style="--x: 71%; --y: 45%"
+                    aria-label="Protected zone"
+                  ></button>
+                  <button
+                    class="marker marker--safe marker--large"
+                    style="--x: 66%; --y: 74%"
+                    aria-label="Protected zone (cluster)"
+                  ></button>
+                </div>
               </div>
               <div class="map-controls" role="group" aria-label="Zoom controls">
                 <button type="button">Zoom +</button>
@@ -190,69 +211,76 @@
                   <p>Real-time field notifications</p>
                 </div>
               </header>
-              <ul class="alert-list">
-                <li class="alert-item alert-item--critical">
-                  <div class="alert-meta">
-                    <span class="alert-type">Landslide Risk</span>
-                    <span class="alert-location">Chamoli District</span>
-                  </div>
-                  <span class="alert-time">2 hours ago</span>
-                </li>
-                <li class="alert-item alert-item--critical">
-                  <div class="alert-meta">
-                    <span class="alert-type">Tiger Sighting</span>
-                    <span class="alert-location">Jim Corbett NP</span>
-                  </div>
-                  <span class="alert-time">4 hours ago</span>
-                </li>
-                <li class="alert-item alert-item--critical">
-                  <div class="alert-meta">
-                    <span class="alert-type">Heavy Rainfall Alert</span>
-                    <span class="alert-location">Pithoragarh</span>
-                  </div>
-                  <span class="alert-time">6 hours ago</span>
-                </li>
-                <li class="alert-item alert-item--critical">
-                  <div class="alert-meta">
-                    <span class="alert-type">Safe Zone Confirmed</span>
-                    <span class="alert-location">Nainital</span>
-                  </div>
-                  <span class="alert-time">1 day ago</span>
-                </li>
-              </ul>
-              <ul class="alert-list alert-list--secondary">
-                <li class="alert-item alert-item--field">
-                  <div class="alert-meta">
-                    <span class="alert-type">Field Update</span>
-                    <span class="alert-location">Snow Leopard Spotted</span>
-                    <span class="alert-note"
-                      >Location: Nanda Devi National Park</span
-                    >
-                    <span class="alert-note">Reported by: Dr. R. Sharma</span>
-                  </div>
-                  <span class="alert-time">3 hours ago</span>
-                </li>
-                <li class="alert-item alert-item--field">
-                  <div class="alert-meta">
-                    <span class="alert-type">System Alert</span>
-                    <span class="alert-location">Vegetation Index Updated</span>
-                    <span class="alert-note"
-                      >New NDVI data available for Q4 2025</span
-                    >
-                  </div>
-                  <span class="alert-time">5 hours ago</span>
-                </li>
-                <li class="alert-item alert-item--field">
-                  <div class="alert-meta">
-                    <span class="alert-type">Weather Alert</span>
-                    <span class="alert-location">Heavy Monsoon Expected</span>
-                    <span class="alert-note"
-                      >Dehradun &amp; Haridwar districts</span
-                    >
-                  </div>
-                  <span class="alert-time">8 hours ago</span>
-                </li>
-              </ul>
+
+              <!-- NEW: scrollable container -->
+              <div class="alerts-scroll">
+                <ul class="alert-list">
+                  <li class="alert-item alert-item--critical">
+                    <div class="alert-meta">
+                      <span class="alert-type">Landslide Risk</span>
+                      <span class="alert-location">Chamoli District</span>
+                    </div>
+                    <span class="alert-time">2 hours ago</span>
+                  </li>
+                  <li class="alert-item alert-item--critical">
+                    <div class="alert-meta">
+                      <span class="alert-type">Tiger Sighting</span>
+                      <span class="alert-location">Jim Corbett NP</span>
+                    </div>
+                    <span class="alert-time">4 hours ago</span>
+                  </li>
+                  <li class="alert-item alert-item--critical">
+                    <div class="alert-meta">
+                      <span class="alert-type">Heavy Rainfall Alert</span>
+                      <span class="alert-location">Pithoragarh</span>
+                    </div>
+                    <span class="alert-time">6 hours ago</span>
+                  </li>
+                  <li class="alert-item alert-item--critical">
+                    <div class="alert-meta">
+                      <span class="alert-type">Safe Zone Confirmed</span>
+                      <span class="alert-location">Nainital</span>
+                    </div>
+                    <span class="alert-time">1 day ago</span>
+                  </li>
+                </ul>
+                <ul class="alert-list alert-list--secondary">
+                  <li class="alert-item alert-item--field">
+                    <div class="alert-meta">
+                      <span class="alert-type">Field Update</span>
+                      <span class="alert-location">Snow Leopard Spotted</span>
+                      <span class="alert-note"
+                        >Location: Nanda Devi National Park</span
+                      >
+                      <span class="alert-note">Reported by: Dr. R. Sharma</span>
+                    </div>
+                    <span class="alert-time">3 hours ago</span>
+                  </li>
+                  <li class="alert-item alert-item--field">
+                    <div class="alert-meta">
+                      <span class="alert-type">System Alert</span>
+                      <span class="alert-location"
+                        >Vegetation Index Updated</span
+                      >
+                      <span class="alert-note"
+                        >New NDVI data available for Q4 2025</span
+                      >
+                    </div>
+                    <span class="alert-time">5 hours ago</span>
+                  </li>
+                  <li class="alert-item alert-item--field">
+                    <div class="alert-meta">
+                      <span class="alert-type">Weather Alert</span>
+                      <span class="alert-location">Heavy Monsoon Expected</span>
+                      <span class="alert-note"
+                        >Dehradun &amp; Haridwar districts</span
+                      >
+                    </div>
+                    <span class="alert-time">8 hours ago</span>
+                  </li>
+                </ul>
+              </div>
+              <!-- END scrollable container -->
             </article>
           </aside>
         </section>

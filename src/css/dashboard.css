@@ -351,12 +351,70 @@ button {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  position: relative; /* NEW: for absolute markers */
 }
 
 .map-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* NEW: markers overlay */
+.map-markers {
+  position: absolute;
+  inset: 0;
+}
+
+.marker {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  transform: translate(-50%, -50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid currentColor;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  pointer-events: auto;
+}
+
+.marker::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.marker--large {
+  width: 40px;
+  height: 40px;
+  border-width: 4px;
+}
+
+.marker--safe {
+  color: var(--brand-green);
+}
+
+.marker--danger {
+  color: var(--brand-red);
+}
+
+.marker--medium {
+  color: var(--brand-yellow);
+}
+.marker--medium::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.25); /* soft halo */
 }
 
 .map-tooltip {
@@ -454,6 +512,27 @@ button {
 
 .alerts-card {
   padding-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  max-height: clamp(420px, 68vh, 780px);
+  overflow: hidden;
+}
+
+.alerts-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding-bottom: 0.25rem;
+}
+
+.alerts-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.alerts-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 8px;
+}
+.alerts-scroll::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .alert-list {
@@ -647,6 +726,16 @@ button {
 
   .risk-card {
     grid-column: auto;
+  }
+
+  .alerts-card {
+    max-height: none;
+  }
+  .alerts-scroll {
+    overflow: visible;
+  }
+  .bottom-grid {
+    margin-top: 0;
   }
 }
 
