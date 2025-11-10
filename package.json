@@ -13,7 +13,8 @@
     "url": "git+https://github.com/Varun-Singh-Rana/Biodiversity_project.git"
   },
   "dependencies": {
-    "pg": "^8.12.0"
+    "better-sqlite3": "^9.0.0",
+    "nodemailer": "^7.0.3"
   },
   "devDependencies": {
     "electron": "latest",

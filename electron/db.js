@@ -1,57 +1,47 @@
-const { Pool } = require("pg");
+const Database = require("better-sqlite3");
 const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
 
-let pool;
+let db;
 
-function buildPool() {
-  if (pool) {
-    return pool;
+function resolveDatabasePath() {
+  if (process.env.SQLITE_DB_PATH) {
+    return path.resolve(process.env.SQLITE_DB_PATH);
   }
 
-  const connectionString = process.env.DATABASE_URL;
-  const sslRequired = process.env.PGSSLMODE === "require";
+  const defaultDir = path.join(__dirname, "..", "data");
+  return path.join(defaultDir, "ecowatch.db");
+}
 
-  if (!connectionString) {
-    const missing = [
-      ["PGDATABASE", process.env.PGDATABASE],
-      ["PGUSER", process.env.PGUSER],
-      ["PGPASSWORD", process.env.PGPASSWORD],
-    ]
-      .filter(([, value]) => !value)
-      .map(([key]) => key);
+function ensureDirectory(targetPath) {
+  const directory = path.dirname(targetPath);
+  if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory, { recursive: true });
+  }
+}
 
-    if (missing.length) {
-      throw new Error(
-        `Missing PostgreSQL connection settings: ${missing.join(", ")}. ` +
-          "Provide DATABASE_URL or the individual PG* environment variables."
-      );
-    }
+function getDatabase() {
+  if (db) {
+    return db;
   }
 
-  const config = connectionString
-    ? {
-        connectionString,
-        ssl: sslRequired ? { rejectUnauthorized: false } : undefined,
-      }
-    : {
-        host: process.env.PGHOST || "localhost",
-        port: Number(process.env.PGPORT || 5432),
-        database: process.env.PGDATABASE,
-        user: process.env.PGUSER,
-        password: process.env.PGPASSWORD,
-        ssl: sslRequired ? { rejectUnauthorized: false } : undefined,
-      };
+  const databasePath = resolveDatabasePath();
+  ensureDirectory(databasePath);
 
-  pool = new Pool(config);
-  return pool;
+  db = new Database(databasePath);
+  db.pragma("journal_mode = WAL");
+  db.pragma("foreign_keys = ON");
+
+  return db;
 }
 
 async function initDatabase() {
-  const client = buildPool();
-  await client.query(`
+  const database = getDatabase();
+  database.exec(`
     CREATE TABLE IF NOT EXISTS login_audit (
-      id BIGSERIAL PRIMARY KEY,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       access_mode TEXT NOT NULL,
       department_id TEXT NOT NULL,
       email TEXT,
@@ -59,7 +49,7 @@ async function initDatabase() {
       password_hash TEXT,
       otp_hash TEXT,
       access_code_hash TEXT,
-      metadata JSONB DEFAULT '{}'::JSONB
+      metadata TEXT DEFAULT '{}'
     )
   `);
 }
@@ -74,7 +64,7 @@ function hashSensitiveField(value) {
 }
 
 async function saveLoginSubmission(payload) {
-  const db = buildPool();
+  const database = getDatabase();
 
   const mode = payload?.mode === "department" ? "department" : "guest";
   const departmentId = (payload?.departmentId || "").trim();
@@ -113,42 +103,50 @@ async function saveLoginSubmission(payload) {
     version: 1,
   };
 
-  const result = await db.query(
-    `INSERT INTO login_audit (
-        access_mode,
-        department_id,
-        email,
-        institution,
-        password_hash,
-        otp_hash,
-        access_code_hash,
-        metadata
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-      RETURNING id, created_at
-    `,
-    [
-      mode,
-      departmentId,
+  const insert = database.prepare(`
+    INSERT INTO login_audit (
+      access_mode,
+      department_id,
       email,
       institution,
-      passwordHash,
-      otpHash,
-      accessCodeHash,
-      JSON.stringify(metadata),
-    ]
+      password_hash,
+      otp_hash,
+      access_code_hash,
+      metadata
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  const metadataJson = JSON.stringify(metadata);
+  const info = insert.run(
+    mode,
+    departmentId,
+    email,
+    institution,
+    passwordHash,
+    otpHash,
+    accessCodeHash,
+    metadataJson
   );
 
+  const createdRow = database
+    .prepare("SELECT created_at FROM login_audit WHERE id = ?")
+    .get(info.lastInsertRowid);
+
   return {
-    id: result.rows[0].id,
-    createdAt: result.rows[0].created_at,
+    id: info.lastInsertRowid,
+    createdAt: createdRow?.created_at || null,
   };
 }
 
 function closeDatabase() {
-  if (pool) {
-    pool.end().catch((error) => {
-      console.error("[database] failed to close pool:", error);
-    });
+  if (db) {
+    try {
+      db.close();
+    } catch (error) {
+      console.error("[database] failed to close database:", error);
+    } finally {
+      db = null;
+    }
   }
 }
 
