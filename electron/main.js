@@ -5,6 +5,9 @@ const {
   saveUserProfile,
   hasUserProfile,
   closeDatabase,
+  getUserProfile,
+  saveFieldData,
+  listFieldData,
 } = require("./db");
 
 let mainWindow;
@@ -57,6 +60,38 @@ ipcMain.handle("userProfile:save", async (_event, payload) => {
     return { ok: true, data: profile };
   } catch (error) {
     console.error("[database] failed to save user profile:", error);
+    return { ok: false, error: error.message };
+  }
+});
+
+ipcMain.handle("userProfile:get", async () => {
+  try {
+    const profile = await getUserProfile();
+    return { ok: true, data: profile };
+  } catch (error) {
+    console.error("[database] failed to load user profile:", error);
+    return { ok: false, error: error.message };
+  }
+});
+
+ipcMain.handle("fieldData:create", async (_event, payload) => {
+  try {
+    const saved = await saveFieldData(payload);
+    return { ok: true, data: saved };
+  } catch (error) {
+    console.error("[database] failed to save field data:", error);
+    return { ok: false, error: error.message };
+  }
+});
+
+ipcMain.handle("fieldData:list", async (_event, options = {}) => {
+  try {
+    const limit =
+      typeof options?.limit === "number" ? options.limit : undefined;
+    const rows = await listFieldData(limit);
+    return { ok: true, data: rows };
+  } catch (error) {
+    console.error("[database] failed to list field data:", error);
     return { ok: false, error: error.message };
   }
 });

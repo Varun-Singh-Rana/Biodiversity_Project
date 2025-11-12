@@ -69,9 +69,9 @@
         </nav>
         <div class="user-area">
           <div class="user-meta">
-            <span class="user-name">Varun Rana</span>
+            <span class="user-name" id="user-name"></span>
           </div>
-          <div class="user-avatar" aria-hidden="true">VR</div>
+          <div class="user-avatar" aria-hidden="true" id="user-avatar"></div>
         </div>
       </header>
 
@@ -103,7 +103,12 @@
           </article>
         </section>
 
-        <section class="form-card" aria-label="Wildlife sighting report">
+        <form
+          class="form-card"
+          id="field-data-form"
+          aria-label="Wildlife sighting report"
+          novalidate
+        >
           <header class="form-card__head">
             <div>
               <h1>Wildlife Sighting Report</h1>
@@ -114,6 +119,13 @@
             <div class="status-chip status-chip--online">Auto-Sync Enabled</div>
           </header>
 
+          <div
+            class="form-feedback"
+            id="form-feedback"
+            role="alert"
+            aria-live="polite"
+          ></div>
+
           <section class="form-section" aria-label="GPS location">
             <header class="section-header">
               <div class="section-title">
@@ -123,16 +135,34 @@
                   <p>Coordinates captured from device sensors.</p>
                 </div>
               </div>
-              <button type="button" class="secondary">Auto-Tag Location</button>
+              <button
+                type="button"
+                class="secondary"
+                data-action="autotag-location"
+              >
+                Auto-Tag Location
+              </button>
             </header>
             <div class="field-grid field-grid--two">
               <label class="field">
                 <span>Latitude</span>
-                <input type="text" placeholder="Auto-detected" readonly />
+                <input
+                  type="text"
+                  name="latitude"
+                  id="field-latitude"
+                  placeholder="Auto-detected"
+                  readonly
+                />
               </label>
               <label class="field">
                 <span>Longitude</span>
-                <input type="text" placeholder="Auto-detected" readonly />
+                <input
+                  type="text"
+                  name="longitude"
+                  id="field-longitude"
+                  placeholder="Auto-detected"
+                  readonly
+                />
               </label>
             </div>
             <p class="field-help">Altitude: 2,450m | Accuracy: ±5m</p>
@@ -142,44 +172,87 @@
             <div class="field-grid field-grid--four">
               <label class="field">
                 <span>Observation Category</span>
-                <select>
-                  <option>Select category</option>
+                <select name="category" id="field-category">
+                  <option value="" selected disabled>Select category</option>
+                  <option value="Wildlife">Wildlife</option>
+                  <option value="Flora">Flora</option>
+                  <option value="Disaster Alert">Disaster Alert</option>
+                  <option value="Patrol">Patrol</option>
+                  <option value="Community">Community</option>
                 </select>
               </label>
               <label class="field">
                 <span>Species / Subject</span>
-                <input type="text" placeholder="Select or type" />
+                <input
+                  type="text"
+                  name="species"
+                  id="field-species"
+                  placeholder="Select or type"
+                  required
+                />
               </label>
               <label class="field">
                 <span>Age Group</span>
-                <select>
-                  <option>Select</option>
+                <select name="ageGroup" id="field-age-group">
+                  <option value="" selected disabled>Select</option>
+                  <option value="Adult">Adult</option>
+                  <option value="Juvenile">Juvenile</option>
+                  <option value="Sub-adult">Sub-adult</option>
+                  <option value="Unknown">Unknown</option>
                 </select>
               </label>
               <label class="field">
                 <span>Observed Behavior</span>
-                <select>
-                  <option>Select</option>
+                <select name="behavior" id="field-behavior">
+                  <option value="" selected disabled>Select</option>
+                  <option value="Feeding">Feeding</option>
+                  <option value="Resting">Resting</option>
+                  <option value="Migrating">Migrating</option>
+                  <option value="Aggressive">Aggressive</option>
+                  <option value="Disaster">Disaster</option>
+                  <option value="Other">Other</option>
                 </select>
               </label>
               <label class="field">
                 <span>Individual Count</span>
-                <input type="number" min="0" placeholder="e.g., 1" />
+                <input
+                  type="number"
+                  name="individualCount"
+                  id="field-individual-count"
+                  min="0"
+                  placeholder="e.g., 1"
+                />
               </label>
               <label class="field">
                 <span>Weather Condition</span>
-                <select>
-                  <option>Select</option>
+                <select name="weather" id="field-weather">
+                  <option value="" selected disabled>Select</option>
+                  <option value="Clear">Clear</option>
+                  <option value="Cloudy">Cloudy</option>
+                  <option value="Rainy">Rainy</option>
+                  <option value="Stormy">Stormy</option>
+                  <option value="Snowfall">Snowfall</option>
+                  <option value="Foggy">Foggy</option>
                 </select>
               </label>
               <label class="field">
                 <span>Temperature (°C)</span>
-                <input type="number" placeholder="e.g., 18" />
+                <input
+                  type="number"
+                  name="temperature"
+                  id="field-temperature"
+                  placeholder="e.g., 18"
+                />
               </label>
               <label class="field">
                 <span>Visibility</span>
-                <select>
-                  <option>Select</option>
+                <select name="visibility" id="field-visibility">
+                  <option value="" selected disabled>Select</option>
+                  <option value="Excellent">Excellent</option>
+                  <option value="Good">Good</option>
+                  <option value="Moderate">Moderate</option>
+                  <option value="Low">Low</option>
+                  <option value="Very Low">Very Low</option>
                 </select>
               </label>
             </div>
@@ -187,9 +260,14 @@
               <span>Detailed Observations</span>
               <textarea
                 rows="4"
+                name="notes"
+                id="field-notes"
+                maxlength="2000"
                 placeholder="Enter observations, habitat conditions, human activity, or other relevant information..."
               ></textarea>
-              <div class="field-meta">Character count: 0 / 2000</div>
+              <div class="field-meta" data-field="notes-count">
+                Character count: 0 / 2000
+              </div>
             </label>
           </section>
 
@@ -225,23 +303,53 @@
             <div class="field-group">
               <h3>Priority Level</h3>
               <div class="chip-group" role="group">
-                <button type="button" class="chip">Routine</button>
-                <button type="button" class="chip chip--active chip--success">
+                <button type="button" class="chip" data-priority="routine">
+                  Routine
+                </button>
+                <button
+                  type="button"
+                  class="chip chip--active chip--success"
+                  data-priority="important"
+                >
                   Important
                 </button>
-                <button type="button" class="chip chip--danger">Urgent</button>
+                <button
+                  type="button"
+                  class="chip chip--danger"
+                  data-priority="urgent"
+                >
+                  Urgent
+                </button>
               </div>
             </div>
             <div class="field-group">
               <h3>Additional Tags</h3>
               <div class="tag-list">
-                <button type="button" class="tag">Endangered Species</button>
-                <button type="button" class="tag">
+                <button type="button" class="tag" data-tag="Endangered Species">
+                  Endangered Species
+                </button>
+                <button
+                  type="button"
+                  class="tag"
+                  data-tag="Human-Wildlife Conflict"
+                >
                   Human-Wildlife Conflict
                 </button>
-                <button type="button" class="tag">Habitat Degradation</button>
-                <button type="button" class="tag">Research Priority</button>
-                <button type="button" class="tag tag--outline">
+                <button
+                  type="button"
+                  class="tag"
+                  data-tag="Habitat Degradation"
+                >
+                  Habitat Degradation
+                </button>
+                <button type="button" class="tag" data-tag="Research Priority">
+                  Research Priority
+                </button>
+                <button
+                  type="button"
+                  class="tag tag--outline"
+                  data-action="add-custom-tag"
+                >
                   + Add Custom Tag
                 </button>
               </div>
@@ -253,8 +361,12 @@
               <button type="submit" class="primary primary--full">
                 Submit Report
               </button>
-              <button type="button" class="secondary">Save as Draft</button>
-              <button type="button" class="ghost">Clear Form</button>
+              <button type="button" class="secondary" data-action="draft">
+                Save as Draft
+              </button>
+              <button type="button" class="ghost" data-action="clear">
+                Clear Form
+              </button>
             </div>
             <div class="sync-status">
               <span class="status-dot status-dot--success"></span>
@@ -264,7 +376,7 @@
               >
             </div>
           </section>
-        </section>
+        </form>
 
         <section class="recent-card" aria-label="Recent field entries">
           <header class="recent-card__head">
@@ -274,27 +386,13 @@
             </div>
             <a class="link" href="#">View all</a>
           </header>
-          <ul class="recent-list">
-            <li>
-              <div>
-                <h3>Bengal Tiger</h3>
-                <p>Jim Corbett NP • 2 hours ago</p>
-              </div>
-              <span class="status-pill status-pill--synced">Synced</span>
-            </li>
-            <li>
-              <div>
-                <h3>Snow Leopard</h3>
-                <p>Nanda Devi • 5 hours ago</p>
-              </div>
-              <span class="status-pill status-pill--pending">Pending</span>
-            </li>
-            <li>
-              <div>
-                <h3>Forest Fire Alert</h3>
-                <p>Tehri Range • 1 day ago</p>
-              </div>
-              <span class="status-pill status-pill--synced">Synced</span>
+          <ul
+            class="recent-list"
+            id="recent-entries"
+            data-empty-message="No field entries yet. Submit a report to see it listed here."
+          >
+            <li class="recent-list__empty">
+              No field entries yet. Submit a report to see it listed here.
             </li>
           </ul>
         </section>

@@ -4,6 +4,10 @@ const path = require("path");
 
 let db;
 
+function getDatabaseFilePath() {
+  return resolveDatabasePath();
+}
+
 function resolveDatabasePath() {
   if (process.env.SQLITE_DB_PATH) {
     return path.resolve(process.env.SQLITE_DB_PATH);
@@ -65,6 +69,17 @@ function get(dbInstance, sql, params = []) {
   });
 }
 
+function all(dbInstance, sql, params = []) {
+  return new Promise((resolve, reject) => {
+    dbInstance.all(sql, params, (error, rows) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(rows || []);
+    });
+  });
+}
+
 async function initDatabase() {
   const database = getDatabase();
   await exec(
@@ -83,6 +98,28 @@ async function initDatabase() {
       city TEXT NOT NULL,
       created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )`
+  );
+
+  await exec(
+    database,
+    `CREATE TABLE IF NOT EXISTS field_data (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      recorded_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      latitude TEXT,
+      longitude TEXT,
+      category TEXT,
+      species TEXT NOT NULL,
+      age_group TEXT,
+      behavior TEXT,
+      individual_count INTEGER,
+      weather TEXT,
+      temperature REAL,
+      visibility TEXT,
+      notes TEXT,
+      priority TEXT,
+      tags TEXT
     )`
   );
 }
@@ -170,6 +207,129 @@ async function getUserProfile() {
   return row || null;
 }
 
+function sanitiseText(value) {
+  if (typeof value !== "string") {
+    return "";
+  }
+  return value.trim();
+}
+
+function sanitiseNumber(value) {
+  if (value === null || value === undefined || value === "") {
+    return null;
+  }
+
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+async function saveFieldData(entry = {}) {
+  const database = getDatabase();
+
+  const species = sanitiseText(entry.species);
+  if (!species) {
+    throw new Error("Species or subject is required");
+  }
+
+  const category = sanitiseText(entry.category);
+  const ageGroup = sanitiseText(entry.ageGroup);
+  const behavior = sanitiseText(entry.behavior);
+  const weather = sanitiseText(entry.weather);
+  const visibility = sanitiseText(entry.visibility);
+  const notes = sanitiseText(entry.notes);
+  const priority = sanitiseText(entry.priority);
+  const tags = Array.isArray(entry.tags)
+    ? entry.tags
+        .map((tag) => sanitiseText(tag))
+        .filter(Boolean)
+        .join(", ")
+    : sanitiseText(entry.tags);
+
+  const latitude = sanitiseText(entry.latitude);
+  const longitude = sanitiseText(entry.longitude);
+  const individualCount = sanitiseNumber(entry.individualCount);
+  const temperature = sanitiseNumber(entry.temperature);
+
+  const statement = await run(
+    database,
+    `INSERT INTO field_data (
+       latitude,
+       longitude,
+       category,
+       species,
+       age_group,
+       behavior,
+       individual_count,
+       weather,
+       temperature,
+       visibility,
+       notes,
+       priority,
+       tags,
+       recorded_at,
+       updated_at
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+    [
+      latitude || null,
+      longitude || null,
+      category || null,
+      species,
+      ageGroup || null,
+      behavior || null,
+      individualCount,
+      weather || null,
+      temperature,
+      visibility || null,
+      notes || null,
+      priority || null,
+      tags || null,
+    ]
+  );
+
+  const saved = await get(
+    database,
+    `SELECT
+       id,
+       species,
+       category,
+       priority,
+       individual_count AS individualCount,
+       recorded_at AS recordedAt,
+       latitude,
+       longitude,
+       tags
+     FROM field_data
+     WHERE id = ?`,
+    [statement.lastID]
+  );
+
+  return saved;
+}
+
+async function listFieldData(limit = 10) {
+  const database = getDatabase();
+
+  const rows = await all(
+    database,
+    `SELECT
+       id,
+       species,
+       category,
+       priority,
+       individual_count AS individualCount,
+       recorded_at AS recordedAt,
+       latitude,
+       longitude,
+       tags
+     FROM field_data
+     ORDER BY recorded_at DESC
+     LIMIT ?`,
+    [Math.max(1, Math.min(Number(limit) || 10, 100))]
+  );
+
+  return rows;
+}
+
 async function hasUserProfile() {
   const database = getDatabase();
   const row = await get(
@@ -201,5 +361,8 @@ module.exports = {
   saveUserProfile,
   getUserProfile,
   hasUserProfile,
+  saveFieldData,
+  listFieldData,
+  getDatabaseFilePath,
   closeDatabase,
 };
