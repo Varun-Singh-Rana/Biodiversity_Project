@@ -106,11 +106,6 @@ button {
   letter-spacing: 0.01em;
 }
 
-.brand-tagline {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-}
-
 .main-nav {
   display: flex;
   gap: 0.5rem;
@@ -154,11 +149,6 @@ button {
 
 .user-name {
   font-weight: 600;
-}
-
-.user-role {
-  font-size: 0.875rem;
-  color: var(--text-muted);
 }
 
 .user-avatar {

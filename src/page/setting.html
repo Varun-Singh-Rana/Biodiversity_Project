@@ -58,9 +58,6 @@
           </div>
           <div class="brand-copy">
             <span class="brand-name">EcoWatch Uttarakhand</span>
-            <span class="brand-tagline"
-              >Ministry of Environment, Forest &amp; Climate Change</span
-            >
           </div>
         </div>
         <nav class="main-nav" aria-label="Primary">
@@ -73,14 +70,70 @@
         <div class="user-area">
           <div class="user-meta">
             <span class="user-name">Varun Rana</span>
-            <span class="user-role">Dev</span>
           </div>
           <div class="user-avatar" aria-hidden="true">VR</div>
-          <button class="secondary" type="button">Logout</button>
         </div>
       </header>
 
-      <main class="content"></main>
+      <main class="content">
+        <section class="form-card">
+          <header class="form-card__head">
+            <div>
+              <h1>User settings</h1>
+              <p>Review and update the details used across EcoWatch.</p>
+            </div>
+            <span class="status-chip status-chip--online">Profile active</span>
+          </header>
+          <form id="user-form" novalidate>
+            <div class="form-section">
+              <div class="section-title">
+                <div>
+                  <h2>Profile details</h2>
+                  <p>Used for login, alerts, and shared reports.</p>
+                </div>
+              </div>
+              <div class="field-grid field-grid--two">
+                <label class="field">
+                  <span>Full name</span>
+                  <input type="text" name="fullName" required />
+                </label>
+                <label class="field">
+                  <span>Email</span>
+                  <input type="email" name="email" required />
+                </label>
+                <label class="field">
+                  <span>Role</span>
+                  <input type="text" name="role" />
+                </label>
+                <label class="field">
+                  <span>Location</span>
+                  <input type="text" name="location" />
+                </label>
+              </div>
+            </div>
+            <div class="form-actions">
+              <div class="action-buttons">
+                <button class="primary" type="submit">Save changes</button>
+              </div>
+              <p class="form-status" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+        </section>
+
+        <section class="recent-card">
+          <header class="recent-card__head">
+            <div>
+              <h2>About EcoWatch Uttarakhand</h2>
+              <p>Supporting the state's conservation and field teams.</p>
+            </div>
+          </header>
+          <p>
+            EcoWatch supports conservation teams with real-time dashboards,
+            biodiversity predictions, and streamlined field data management for
+            Uttarakhand's fragile ecosystems.
+          </p>
+        </section>
+      </main>
     </div>
 
     <script src="../js/window-controls.js" defer></script>

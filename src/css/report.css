@@ -106,11 +106,6 @@ button {
   letter-spacing: 0.01em;
 }
 
-.brand-tagline {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-}
-
 .main-nav {
   display: flex;
   gap: 0.5rem;
@@ -154,11 +149,6 @@ button {
 
 .user-name {
   font-weight: 600;
-}
-
-.user-role {
-  font-size: 0.875rem;
-  color: var(--text-muted);
 }
 
 .user-avatar {
@@ -273,29 +263,29 @@ button {
 
 .quick-actions {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.1rem;
 }
 
 .action-card {
   display: flex;
-  gap: 1.5rem;
+  gap: 1.1rem;
   align-items: center;
   background: var(--surface);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem 1.75rem;
+  border-radius: 14px;
+  padding: 1.1rem 1.35rem;
   border: 1px solid rgba(15, 23, 42, 0.05);
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
 }
 
 .action-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
   display: grid;
   place-items: center;
   background: var(--surface-muted);
-  font-size: 1.5rem;
+  font-size: 1.3rem;
 }
 
 .action-icon--forest {
@@ -321,20 +311,20 @@ button {
 .action-body {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.6rem;
   flex: 1 1 auto;
 }
 
 .action-body h2 {
-  margin: 0 0 0.45rem;
-  font-size: 1.05rem;
+  margin: 0;
+  font-size: 0.98rem;
   font-weight: 600;
 }
 
 .action-body p {
   margin: 0;
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 0.86rem;
 }
 
 .action-footer {
@@ -344,11 +334,11 @@ button {
 .download-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.55rem 1.35rem;
+  gap: 0.45rem;
+  padding: 0.45rem 1.1rem;
   border-radius: var(--radius-pill);
   background: var(--surface);
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  border: 1px solid rgba(148, 163, 184, 0.3);
   font-weight: 600;
   color: var(--text-secondary);
   transition: background 0.2s ease, box-shadow 0.2s ease;
@@ -356,7 +346,7 @@ button {
 
 .download-btn:hover {
   background: var(--surface-muted);
-  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.12);
 }
 
 .form-card {

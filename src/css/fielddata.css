@@ -106,11 +106,6 @@ button {
   letter-spacing: 0.01em;
 }
 
-.brand-tagline {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-}
-
 .main-nav {
   display: flex;
   gap: 0.5rem;
@@ -154,11 +149,6 @@ button {
 
 .user-name {
   font-weight: 600;
-}
-
-.user-role {
-  font-size: 0.875rem;
-  color: var(--text-muted);
 }
 
 .user-avatar {
@@ -226,40 +216,45 @@ button {
 
 .quick-actions {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.1rem;
 }
 
 .action-card {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
   align-items: center;
   background: var(--surface);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem 1.75rem;
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
   border: 1px solid rgba(15, 23, 42, 0.05);
   box-shadow: var(--shadow-soft);
 }
 
 .action-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
   display: grid;
   place-items: center;
   background: var(--surface-muted);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 }
 
 .action-body h2 {
-  margin: 0 0 0.45rem;
-  font-size: 1.05rem;
+  margin: 0 0 0.3rem;
+  font-size: 0.98rem;
   font-weight: 600;
 }
 
 .action-body p {
   margin: 0;
   color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.action-card .primary {
+  padding: 0.45rem 1.15rem;
   font-size: 0.9rem;
 }
 
