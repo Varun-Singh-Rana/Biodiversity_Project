@@ -13,7 +13,8 @@
     "url": "git+https://github.com/Varun-Singh-Rana/Biodiversity_project.git"
   },
   "dependencies": {
-    "better-sqlite3": "^9.0.0",
+    "dotenv": "^16.4.5",
+    "sqlite3": "^5.1.7",
     "nodemailer": "^7.0.3"
   },
   "devDependencies": {
@@ -31,6 +32,12 @@
     "directories": {
       "output": "dist"
     },
+    "extraResources": [
+      {
+        "from": "src/assets",
+        "to": "assets"
+      }
+    ],
     "win": {
       "icon": "src/assets/logo.ico"
     }

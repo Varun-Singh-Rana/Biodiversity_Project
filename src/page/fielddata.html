@@ -11,8 +11,38 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../css/fielddata.css" />
+    <link rel="stylesheet" href="../css/window-controls.css" />
   </head>
   <body>
+    <div class="window-controls-bar" role="banner">
+      <div class="window-controls-title">EcoWatch Uttarakhand</div>
+      <div class="window-controls-actions">
+        <button
+          type="button"
+          class="window-control-btn"
+          data-window-action="minimize"
+          aria-label="Minimize"
+        >
+          <span class="window-control-icon">-</span>
+        </button>
+        <button
+          type="button"
+          class="window-control-btn"
+          data-window-action="toggle-maximize"
+          aria-label="Maximize"
+        >
+          <span class="window-control-icon">[]</span>
+        </button>
+        <button
+          type="button"
+          class="window-control-btn"
+          data-window-action="close"
+          aria-label="Close"
+        >
+          <span class="window-control-icon">x</span>
+        </button>
+      </div>
+    </div>
     <div class="app-shell">
       <header class="top-nav">
         <div class="brand">
@@ -297,6 +327,7 @@
       </footer>
     </div>
 
+    <script src="../js/window-controls.js" defer></script>
     <script src="../js/fielddata.js" defer></script>
   </body>
 </html>

@@ -10,25 +10,13 @@ if (typeof require === "function") {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("access-form");
+  const form = document.getElementById("onboarding-form");
   if (!form) {
     return;
   }
 
-  const hiddenModeField = form.querySelector("input[name='mode']");
-  const toggleButtons = Array.from(
-    document.querySelectorAll("[data-mode-toggle]")
-  );
-  const guestSections = Array.from(
-    document.querySelectorAll("[data-section='guest']")
-  );
-  const departmentSections = Array.from(
-    document.querySelectorAll("[data-section='department']")
-  );
   const submitButton = form.querySelector("button[type='submit']");
   const feedback = document.getElementById("form-feedback");
-
-  let currentMode = "guest";
 
   function setFeedback(message, isError = false) {
     if (!feedback) {
@@ -39,113 +27,72 @@ document.addEventListener("DOMContentLoaded", () => {
     feedback.classList.toggle("error", Boolean(isError));
   }
 
-  function setMode(mode) {
-    currentMode = mode;
-    hiddenModeField.value = mode;
-
-    toggleButtons.forEach((button) => {
-      const isActive = button.dataset.modeToggle === mode;
-      button.classList.toggle("active", isActive);
-      button.setAttribute("aria-selected", String(isActive));
-    });
-
-    guestSections.forEach((section) => {
-      section.classList.toggle("hidden", mode !== "guest");
-      section
-        .querySelectorAll("input")
-        .forEach((input) =>
-          input.toggleAttribute("required", mode === "guest")
-        );
-    });
-
-    departmentSections.forEach((section) => {
-      section.classList.toggle("hidden", mode !== "department");
-      section
-        .querySelectorAll("input")
-        .forEach((input) =>
-          input.toggleAttribute("required", mode === "department")
-        );
-    });
-
-    if (submitButton) {
-      submitButton.textContent =
-        mode === "guest" ? "Request Guest Access" : "Login to Dashboard";
-    }
-
-    setFeedback("");
-  }
-
-  toggleButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const mode = button.dataset.modeToggle;
-      if (mode && mode !== currentMode) {
-        setMode(mode);
-      }
-    });
-  });
-
   function gatherPayload() {
     const formData = new FormData(form);
 
     return {
-      mode: currentMode,
-      departmentId: (formData.get("departmentId") || "").trim(),
+      name: (formData.get("fullName") || "").trim(),
       email: (formData.get("email") || "").trim(),
-      institution: (formData.get("institution") || "").trim(),
-      accessCode: (formData.get("accessCode") || "").trim(),
-      password: formData.get("password") || "",
-      otp: (formData.get("otp") || "").trim(),
+      dob: (formData.get("dob") || "").trim(),
+      city: (formData.get("city") || "").trim(),
     };
   }
 
   function validate(payload) {
     const missing = [];
 
-    if (!payload.departmentId) {
-      missing.push("Department ID");
+    if (!payload.name) {
+      missing.push("full name");
     }
 
-    if (payload.mode === "guest") {
-      if (!payload.email) {
-        missing.push("Email address");
-      }
-      if (!payload.institution) {
-        missing.push("Institution/Organization");
-      }
-      if (!payload.accessCode) {
-        missing.push("Guest access code");
-      }
-    } else {
-      if (!payload.password) {
-        missing.push("Password");
-      }
+    if (!payload.email) {
+      missing.push("email address");
+    }
+
+    if (!payload.dob) {
+      missing.push("date of birth");
+    }
+
+    if (!payload.city) {
+      missing.push("city");
     }
 
     if (missing.length) {
-      throw new Error(`Please provide: ${missing.join(", ")}.`);
+      throw new Error(`Please provide your ${missing.join(", ")}.`);
     }
 
-    if (
-      payload.mode === "department" &&
-      payload.otp &&
-      !/^\d{6}$/.test(payload.otp)
-    ) {
-      throw new Error("OTP must be a 6-digit code.");
+    if (payload.name.length < 3) {
+      throw new Error("Name should be at least 3 characters long.");
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    if (!emailPattern.test(payload.email)) {
+      throw new Error("Enter a valid email address.");
+    }
+
+    const dobDate = new Date(payload.dob);
+    if (Number.isNaN(dobDate.getTime())) {
+      throw new Error("Enter a valid date of birth.");
+    }
+
+    const today = new Date();
+    if (dobDate > today) {
+      throw new Error("Date of birth cannot be in the future.");
     }
 
     return payload;
   }
 
-  async function submitToDatabase(payload) {
+  async function saveProfile(payload) {
     if (!ipcRenderer || typeof ipcRenderer.invoke !== "function") {
       throw new Error(
-        "Database bridge is unavailable. Ensure the application runs inside Electron and dependencies are installed."
+        "Profile bridge is unavailable. Launch the app through Electron after installing dependencies."
       );
     }
 
-    const response = await ipcRenderer.invoke("login:submit", payload);
+    const response = await ipcRenderer.invoke("userProfile:save", payload);
     if (!response?.ok) {
-      throw new Error(response?.error || "Unable to save record.");
+      throw new Error(response?.error || "Unable to save profile.");
     }
 
     return response.data;
@@ -155,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
     setFeedback("");
 
-    const spinnerText = submitButton?.textContent;
+    const originalLabel = submitButton?.textContent;
 
     try {
       const payload = validate(gatherPayload());
@@ -163,39 +110,29 @@ document.addEventListener("DOMContentLoaded", () => {
       if (submitButton) {
         submitButton.disabled = true;
         submitButton.dataset.loading = "true";
+        submitButton.textContent = "Saving...";
       }
 
-      const { id } = await submitToDatabase(payload);
+      await saveProfile(payload);
 
-      setFeedback(
-        payload.mode === "guest"
-          ? "Guest access request submitted successfully."
-          : "Credentials verified. Redirecting to dashboard..."
-      );
+      setFeedback("Profile saved. Redirecting to your dashboard...");
 
-      form.reset();
-      hiddenModeField.value = payload.mode;
-
-      if (payload.mode === "department") {
-        setTimeout(() => {
-          window.location.href = "./dashboard.html";
-        }, 1200);
-      }
+      setTimeout(() => {
+        window.location.href = "./dashboard.html";
+      }, 900);
     } catch (error) {
-      console.error("Login submission failed:", error);
-      setFeedback(error.message || "Unable to process request.", true);
+      console.error("Profile setup failed:", error);
+      setFeedback(error.message || "Unable to save profile.", true);
     } finally {
       if (submitButton) {
         submitButton.disabled = false;
         submitButton.dataset.loading = "false";
-        if (spinnerText) {
-          submitButton.textContent = spinnerText;
+        if (originalLabel) {
+          submitButton.textContent = originalLabel;
         }
       }
     }
   }
 
   form.addEventListener("submit", handleSubmit);
-
-  setMode(currentMode);
 });

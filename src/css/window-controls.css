@@ -1,0 +1,74 @@
+:root {
+  --window-bar-height: 44px;
+}
+
+body {
+  padding-top: var(--window-bar-height);
+}
+
+.window-controls-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--window-bar-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  -webkit-app-region: drag;
+}
+
+.window-controls-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1b7f2f;
+  letter-spacing: 0.02em;
+}
+
+.window-controls-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  -webkit-app-region: no-drag;
+}
+
+.window-control-btn {
+  width: 40px;
+  height: 26px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #1b7f2f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.window-control-btn:hover {
+  background: rgba(27, 127, 47, 0.12);
+}
+
+.window-control-btn[data-window-action="close"] {
+  color: #c62828;
+}
+
+.window-control-btn[data-window-action="close"]:hover {
+  background: rgba(198, 40, 40, 0.12);
+}
+
+.window-control-icon {
+  pointer-events: none;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.window-control-btn[data-window-state="maximized"] .window-control-icon {
+  font-size: 0.78rem;
+}

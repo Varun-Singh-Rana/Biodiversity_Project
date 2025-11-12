@@ -1,15 +1,21 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
-const { initDatabase, saveLoginSubmission, closeDatabase } = require("./db");
+const {
+  initDatabase,
+  saveUserProfile,
+  hasUserProfile,
+  closeDatabase,
+} = require("./db");
 
 let mainWindow;
 
 async function createWindow() {
+  const isFirstRun = !(await hasUserProfile());
   mainWindow = new BrowserWindow({
-    width: 1920,
-    height: 1080,
-    minWidth: 900,
-    minHeight: 600,
+    width: 1200,
+    height: 800,
+    minWidth: 1200,
+    minHeight: 800,
     icon: path.join(__dirname, "../src/assets/logo.ico"),
     webPreferences: {
       contextIsolation: false,
@@ -27,7 +33,8 @@ async function createWindow() {
     mainWindow.show();
   });
 
-  await mainWindow.loadFile(path.join(__dirname, "../src/page/dashboard.html"));
+  const entryFile = isFirstRun ? "login.html" : "dashboard.html";
+  await mainWindow.loadFile(path.join(__dirname, "../src/page", entryFile));
 
   mainWindow.on("closed", () => {
     mainWindow = null;
@@ -44,13 +51,41 @@ app.whenReady().then(async () => {
   await createWindow();
 });
 
-ipcMain.handle("login:submit", async (_event, payload) => {
+ipcMain.handle("userProfile:save", async (_event, payload) => {
   try {
-    const result = await saveLoginSubmission(payload);
-    return { ok: true, data: result };
+    const profile = await saveUserProfile(payload);
+    return { ok: true, data: profile };
   } catch (error) {
-    console.error("[database] failed to save login submission:", error);
+    console.error("[database] failed to save user profile:", error);
     return { ok: false, error: error.message };
+  }
+});
+
+ipcMain.handle("window-control", (event, action) => {
+  const targetWindow = BrowserWindow.fromWebContents(event.sender);
+  if (!targetWindow) {
+    return null;
+  }
+
+  switch (action) {
+    case "minimize":
+      targetWindow.minimize();
+      return null;
+    case "toggle-maximize":
+      if (targetWindow.isMaximized()) {
+        targetWindow.unmaximize();
+      } else {
+        targetWindow.maximize();
+      }
+      return { isMaximized: targetWindow.isMaximized() };
+    case "close":
+      targetWindow.close();
+      return null;
+    case "query-maximized":
+      return { isMaximized: targetWindow.isMaximized() };
+    default:
+      console.warn("[window] unknown control action:", action);
+      return null;
   }
 });
 
@@ -61,7 +96,9 @@ app.on("window-all-closed", () => {
 });
 
 app.on("before-quit", () => {
-  closeDatabase();
+  closeDatabase().catch((error) => {
+    console.error("[database] failed to close cleanly:", error);
+  });
 });
 
 app.on("activate", () => {

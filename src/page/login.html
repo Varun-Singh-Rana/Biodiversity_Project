@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EcoWatch Uttarakhand | Secure Access Portal</title>
+    <title>EcoWatch Uttarakhand | First-Time Setup</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -11,157 +11,111 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../css/login.css" />
+    <link rel="stylesheet" href="../css/window-controls.css" />
+    <script defer src="../js/window-controls.js"></script>
     <script defer src="../js/login.js"></script>
   </head>
   <body>
-    <main class="login-layout">
-      <section class="info-panel" aria-label="EcoWatch overview">
+    <div class="window-controls-bar" role="banner">
+      <div class="window-controls-title">EcoWatch Uttarakhand</div>
+      <div class="window-controls-actions">
+        <button
+          type="button"
+          class="window-control-btn"
+          data-window-action="minimize"
+          aria-label="Minimize"
+        >
+          <span class="window-control-icon">-</span>
+        </button>
+        <button
+          type="button"
+          class="window-control-btn"
+          data-window-action="toggle-maximize"
+          aria-label="Maximize"
+        >
+          <span class="window-control-icon">[]</span>
+        </button>
+        <button
+          type="button"
+          class="window-control-btn"
+          data-window-action="close"
+          aria-label="Close"
+        >
+          <span class="window-control-icon">x</span>
+        </button>
+      </div>
+    </div>
+    <main class="onboarding-layout">
+      <section class="brand-panel" aria-label="EcoWatch overview">
         <div class="brand-card">
           <div class="brand-icon" aria-hidden="true">
             <span class="icon-tree"></span>
           </div>
           <h1>EcoWatch Uttarakhand</h1>
-          <p class="brand-subtitle">Forest & Wildlife Monitoring System</p>
+          <p class="brand-subtitle">Forest &amp; Wildlife Monitoring System</p>
         </div>
 
-        <div class="info-card">
-          <div class="info-card__header">
-            <div class="shield-icon" aria-hidden="true"></div>
-            <div>
-              <p class="info-eyebrow">Developed under</p>
-              <p class="info-heading">
-                Ministry of Environment, Forest & Climate Change
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="info-card">
-          <h2>Empowering conservation through</h2>
-          <ul class="feature-list">
-            <li>
-              <span class="dot" aria-hidden="true"></span>
-              Real-time biodiversity monitoring
-            </li>
-            <li>
-              <span class="dot" aria-hidden="true"></span>
-              AI-powered disaster prediction
-            </li>
-            <li>
-              <span class="dot" aria-hidden="true"></span>
-              Field data collaboration
-            </li>
+        <div class="brand-summary">
+          <p>
+            Set up your profile once to personalize access to field reports,
+            biodiversity insights, and conservation alerts across the state.
+          </p>
+          <ul class="highlight-list">
+            <li>Secure data stewardship</li>
+            <li>Updates from forest divisions</li>
+            <li>Insights for rapid response</li>
           </ul>
-        </div>
-
-        <div class="goi-card">
-          <div class="goi-logo" aria-hidden="true">GOI</div>
-          <div>
-            <p>Government of India</p>
-            <p>Digital India Initiative</p>
-          </div>
         </div>
       </section>
 
-      <section class="form-panel" aria-label="Secure Access Portal">
+      <section class="form-panel" aria-label="First-time access form">
         <div class="form-card">
           <header>
-            <h2>Secure Access Portal</h2>
+            <h2>Welcome Aboard</h2>
             <p class="tagline">
-              Login with your official credentials to access the monitoring
-              system
+              Please share a few details to activate your EcoWatch dashboard.
             </p>
           </header>
 
-          <div class="mode-toggle" role="tablist" aria-label="Access mode">
-            <button
-              type="button"
-              class="toggle-btn"
-              data-mode-toggle="department"
-              role="tab"
-              aria-selected="false"
-            >
-              Department ID
-            </button>
-            <button
-              type="button"
-              class="toggle-btn active"
-              data-mode-toggle="guest"
-              role="tab"
-              aria-selected="true"
-            >
-              Guest Researcher
-            </button>
-          </div>
-
-          <form id="access-form" novalidate>
-            <input type="hidden" name="mode" value="guest" />
-
-            <div class="form-group" data-section="common">
-              <label for="departmentId">Department ID</label>
+          <form id="onboarding-form" novalidate>
+            <div class="form-group">
+              <label for="fullName">Full Name</label>
               <input
-                id="departmentId"
-                name="departmentId"
+                id="fullName"
+                name="fullName"
                 type="text"
-                autocomplete="off"
-                placeholder="e.g., MOEF-UK-2024-001"
+                autocomplete="name"
+                placeholder="e.g., Ananya Rawat"
                 required
               />
             </div>
 
-            <div class="form-group" data-section="guest">
+            <div class="form-group">
               <label for="email">Email Address</label>
               <input
                 id="email"
                 name="email"
                 type="email"
                 autocomplete="email"
-                placeholder="researcher@institution.edu"
+                placeholder="you@example.gov.in"
+                required
               />
             </div>
 
-            <div class="form-group" data-section="guest">
-              <label for="institution">Institution/Organization</label>
+            <div class="form-group">
+              <label for="dob">Date of Birth</label>
+              <input id="dob" name="dob" type="date" required />
+            </div>
+
+            <div class="form-group">
+              <label for="city">City</label>
               <input
-                id="institution"
-                name="institution"
+                id="city"
+                name="city"
                 type="text"
-                autocomplete="organization"
-                placeholder="University or Research Institute"
-              />
-            </div>
-
-            <div class="form-group" data-section="guest">
-              <label for="accessCode">Guest Access Code</label>
-              <input
-                id="accessCode"
-                name="accessCode"
-                type="text"
-                placeholder="Provided by administrator"
-              />
-            </div>
-
-            <div class="form-group hidden" data-section="department">
-              <label for="password">Password</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autocomplete="current-password"
-                placeholder="Enter your password"
-              />
-            </div>
-
-            <div class="form-group hidden" data-section="department">
-              <label for="otp">OTP (if enabled)</label>
-              <input
-                id="otp"
-                name="otp"
-                type="text"
-                inputmode="numeric"
-                pattern="\d{6}"
-                maxlength="6"
-                placeholder="6-digit OTP"
+                autocomplete="address-level2"
+                placeholder="e.g., Dehradun"
+                required
               />
             </div>
 
@@ -173,18 +127,18 @@
             ></div>
 
             <button type="submit" class="submit-btn">
-              Request Guest Access
+              Save &amp; Continue
             </button>
           </form>
 
           <footer class="form-footer">
             <p>
-              Need help? Contact:
+              Need assistance? Write to
               <a href="mailto:ecowatch-support@gov.in"
                 >ecowatch-support@gov.in</a
               >
             </p>
-            <p>Compliant with UX4G &amp; GIGW Standards</p>
+            <p>Aligns with UX4G &amp; GIGW best practices</p>
           </footer>
         </div>
       </section>

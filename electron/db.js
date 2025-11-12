@@ -1,5 +1,4 @@
-const Database = require("better-sqlite3");
-const crypto = require("crypto");
+const sqlite3 = require("sqlite3").verbose();
 const fs = require("fs");
 const path = require("path");
 
@@ -11,7 +10,7 @@ function resolveDatabasePath() {
   }
 
   const defaultDir = path.join(__dirname, "..", "data");
-  return path.join(defaultDir, "ecowatch.db");
+  return path.join(defaultDir, "ecowatch.sqlite");
 }
 
 function ensureDirectory(targetPath) {
@@ -29,129 +28,178 @@ function getDatabase() {
   const databasePath = resolveDatabasePath();
   ensureDirectory(databasePath);
 
-  db = new Database(databasePath);
-  db.pragma("journal_mode = WAL");
-  db.pragma("foreign_keys = ON");
-
+  db = new sqlite3.Database(databasePath);
   return db;
+}
+
+function exec(dbInstance, sql) {
+  return new Promise((resolve, reject) => {
+    dbInstance.exec(sql, (error) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve();
+    });
+  });
+}
+
+function run(dbInstance, sql, params = []) {
+  return new Promise((resolve, reject) => {
+    dbInstance.run(sql, params, function runCallback(error) {
+      if (error) {
+        return reject(error);
+      }
+      resolve(this);
+    });
+  });
+}
+
+function get(dbInstance, sql, params = []) {
+  return new Promise((resolve, reject) => {
+    dbInstance.get(sql, params, (error, row) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(row);
+    });
+  });
 }
 
 async function initDatabase() {
   const database = getDatabase();
-  database.exec(`
-    CREATE TABLE IF NOT EXISTS login_audit (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      access_mode TEXT NOT NULL,
-      department_id TEXT NOT NULL,
-      email TEXT,
-      institution TEXT,
-      password_hash TEXT,
-      otp_hash TEXT,
-      access_code_hash TEXT,
-      metadata TEXT DEFAULT '{}'
-    )
-  `);
-}
-
-function hashSensitiveField(value) {
-  if (!value) {
-    return null;
-  }
-
-  const salt = process.env.LOGIN_HASH_SALT || "ecowatch-salt";
-  return crypto.createHash("sha256").update(`${salt}:${value}`).digest("hex");
-}
-
-async function saveLoginSubmission(payload) {
-  const database = getDatabase();
-
-  const mode = payload?.mode === "department" ? "department" : "guest";
-  const departmentId = (payload?.departmentId || "").trim();
-  const email = (payload?.email || "").trim() || null;
-  const institution = (payload?.institution || "").trim() || null;
-  const passwordHash = hashSensitiveField(payload?.password || null);
-  const otpHash = hashSensitiveField(payload?.otp || null);
-  const accessCodeHash = hashSensitiveField(payload?.accessCode || null);
-
-  if (!departmentId) {
-    throw new Error("Department ID is required");
-  }
-
-  if (mode === "guest") {
-    if (!email) {
-      throw new Error("Email address is required for guest access");
-    }
-    if (!institution) {
-      throw new Error("Institution/Organization is required for guest access");
-    }
-    if (!accessCodeHash) {
-      throw new Error("Guest access code is required");
-    }
-  } else {
-    if (!passwordHash) {
-      throw new Error("Password is required for department login");
-    }
-  }
-
-  const metadata = {
-    raw: {
-      hasPassword: Boolean(payload?.password),
-      hasOtp: Boolean(payload?.otp),
-      hasAccessCode: Boolean(payload?.accessCode),
-    },
-    version: 1,
-  };
-
-  const insert = database.prepare(`
-    INSERT INTO login_audit (
-      access_mode,
-      department_id,
-      email,
-      institution,
-      password_hash,
-      otp_hash,
-      access_code_hash,
-      metadata
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-
-  const metadataJson = JSON.stringify(metadata);
-  const info = insert.run(
-    mode,
-    departmentId,
-    email,
-    institution,
-    passwordHash,
-    otpHash,
-    accessCodeHash,
-    metadataJson
+  await exec(
+    database,
+    `PRAGMA journal_mode = WAL;
+     PRAGMA foreign_keys = ON;`
   );
 
-  const createdRow = database
-    .prepare("SELECT created_at FROM login_audit WHERE id = ?")
-    .get(info.lastInsertRowid);
+  await exec(
+    database,
+    `CREATE TABLE IF NOT EXISTS user_profile (
+      id INTEGER PRIMARY KEY CHECK (id = 1),
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      dob TEXT NOT NULL,
+      city TEXT NOT NULL,
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )`
+  );
+}
 
-  return {
-    id: info.lastInsertRowid,
-    createdAt: createdRow?.created_at || null,
-  };
+function validateEmail(email) {
+  const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  return pattern.test(email);
+}
+
+function normaliseDob(dob) {
+  const parsed = new Date(dob);
+  if (Number.isNaN(parsed.getTime())) {
+    throw new Error("Invalid date of birth");
+  }
+
+  const year = parsed.getFullYear();
+  const month = String(parsed.getMonth() + 1).padStart(2, "0");
+  const day = String(parsed.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+async function saveUserProfile(payload) {
+  const database = getDatabase();
+
+  const name = (payload?.name || "").trim();
+  const email = (payload?.email || "").trim().toLowerCase();
+  const dob = (payload?.dob || "").trim();
+  const city = (payload?.city || "").trim();
+
+  if (!name) {
+    throw new Error("Name is required");
+  }
+
+  if (name.length < 3) {
+    throw new Error("Name should be at least three characters long");
+  }
+
+  if (!email) {
+    throw new Error("Email address is required");
+  }
+
+  if (!validateEmail(email)) {
+    throw new Error("Email address is invalid");
+  }
+
+  if (!dob) {
+    throw new Error("Date of birth is required");
+  }
+
+  const normalisedDob = normaliseDob(dob);
+  const today = new Date();
+  const dobDate = new Date(normalisedDob);
+  if (dobDate > today) {
+    throw new Error("Date of birth cannot be in the future");
+  }
+
+  if (!city) {
+    throw new Error("City is required");
+  }
+
+  await run(
+    database,
+    `INSERT INTO user_profile (id, name, email, dob, city, created_at, updated_at)
+     VALUES (1, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+     ON CONFLICT(id) DO UPDATE SET
+       name = excluded.name,
+       email = excluded.email,
+       dob = excluded.dob,
+       city = excluded.city,
+       updated_at = CURRENT_TIMESTAMP`,
+    [name, email, normalisedDob, city]
+  );
+
+  return getUserProfile();
+}
+
+async function getUserProfile() {
+  const database = getDatabase();
+  const row = await get(
+    database,
+    `SELECT id, name, email, dob, city, created_at AS createdAt, updated_at AS updatedAt
+       FROM user_profile
+       WHERE id = 1`
+  );
+  return row || null;
+}
+
+async function hasUserProfile() {
+  const database = getDatabase();
+  const row = await get(
+    database,
+    "SELECT 1 AS hasProfile FROM user_profile WHERE id = 1 LIMIT 1"
+  );
+  return Boolean(row);
 }
 
 function closeDatabase() {
-  if (db) {
-    try {
-      db.close();
-    } catch (error) {
-      console.error("[database] failed to close database:", error);
-    } finally {
-      db = null;
+  return new Promise((resolve) => {
+    if (!db) {
+      resolve();
+      return;
     }
-  }
+
+    db.close((error) => {
+      if (error) {
+        console.error("[database] failed to close database:", error);
+      }
+      db = null;
+      resolve();
+    });
+  });
 }
 
 module.exports = {
   initDatabase,
-  saveLoginSubmission,
+  saveUserProfile,
+  getUserProfile,
+  hasUserProfile,
   closeDatabase,
 };
