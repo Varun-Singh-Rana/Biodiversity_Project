@@ -1,11 +1,17 @@
-const STORAGE_KEY = "ecowatch-user-settings";
+let settingsBridge = null;
 
-const defaultUser = {
-  fullName: "Varun Singh Rana",
-  email: "varun.rana@example.com",
-  role: "Developer",
-  location: "Dehradun, India",
-};
+if (typeof require === "function") {
+  try {
+    const { ipcRenderer } = require("electron");
+    settingsBridge = ipcRenderer ?? null;
+  } catch (error) {
+    console.warn("IPC renderer unavailable for settings:", error);
+  }
+}
+
+function sanitiseText(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("#user-form");
@@ -13,59 +19,163 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const statusEl = form.querySelector(".form-status");
+  const feedbackEl = document.getElementById("form-feedback");
+  const submitButton = form.querySelector('button[type="submit"]');
 
-  const populateForm = (data) => {
-    const values = { ...defaultUser, ...data };
-    Object.entries(values).forEach(([name, value]) => {
-      const input = form.elements.namedItem(name);
-      if (!input) {
-        return;
+  const nameInput = form.elements.namedItem("name");
+  const emailInput = form.elements.namedItem("email");
+  const dobInput = form.elements.namedItem("dob");
+  const cityInput = form.elements.namedItem("city");
+
+  const userNameNode = document.getElementById("user-name");
+  const userRoleNode = document.getElementById("user-role");
+  const userAvatarNode = document.getElementById("user-avatar");
+
+  function setFeedback(message, type = "neutral") {
+    if (!feedbackEl) {
+      return;
+    }
+    feedbackEl.textContent = message || "";
+    feedbackEl.classList.remove("form-status--success", "form-status--error");
+    if (!message) {
+      return;
+    }
+    if (type === "success") {
+      feedbackEl.classList.add("form-status--success");
+    } else if (type === "error") {
+      feedbackEl.classList.add("form-status--error");
+    }
+  }
+
+  function updateHeader(profile) {
+    if (profile?.name && userNameNode) {
+      userNameNode.textContent = profile.name;
+    }
+    if (profile?.city && userRoleNode) {
+      userRoleNode.textContent = profile.city;
+    }
+    if (profile?.name && userAvatarNode) {
+      const parts = sanitiseText(profile.name).split(/\s+/).filter(Boolean);
+      if (!parts.length) {
+        userAvatarNode.textContent = "EW";
+      } else if (parts.length === 1) {
+        userAvatarNode.textContent = parts[0].slice(0, 2).toUpperCase();
+      } else {
+        userAvatarNode.textContent = `${parts[0][0]}${
+          parts[parts.length - 1][0]
+        }`.toUpperCase();
       }
-      input.value = value || "";
-    });
-  };
+    }
+  }
 
-  const loadUser = () => {
+  function populateForm(profile) {
+    if (!profile) {
+      return;
+    }
+    if (nameInput) {
+      nameInput.value = profile.name || "";
+    }
+    if (emailInput) {
+      emailInput.value = profile.email || "";
+    }
+    if (dobInput) {
+      dobInput.value = profile.dob || "";
+    }
+    if (cityInput) {
+      cityInput.value = profile.city || "";
+    }
+    updateHeader(profile);
+  }
+
+  function collectPayload() {
+    const payload = {
+      name: sanitiseText(nameInput?.value),
+      email: sanitiseText(emailInput?.value),
+      dob: sanitiseText(dobInput?.value),
+      city: sanitiseText(cityInput?.value),
+    };
+
+    if (!payload.name || payload.name.length < 3) {
+      throw new Error("Name should be at least 3 characters long.");
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    if (!emailPattern.test(payload.email)) {
+      throw new Error("Enter a valid email address.");
+    }
+
+    if (!payload.dob) {
+      throw new Error("Date of birth is required.");
+    }
+    const dobDate = new Date(payload.dob);
+    if (Number.isNaN(dobDate.getTime())) {
+      throw new Error("Enter a valid date of birth.");
+    }
+
+    if (!payload.city) {
+      throw new Error("City is required.");
+    }
+
+    return payload;
+  }
+
+  async function loadProfile() {
+    if (!settingsBridge || typeof settingsBridge.invoke !== "function") {
+      return;
+    }
+
     try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        return JSON.parse(stored);
+      const response = await settingsBridge.invoke("userProfile:get");
+      if (!response?.ok) {
+        throw new Error(response?.error || "Unable to fetch profile.");
       }
+      populateForm(response.data || {});
     } catch (error) {
-      console.warn("Could not read saved settings", error);
+      console.error("Failed to load profile:", error);
+      setFeedback("Could not load profile. Try again later.", "error");
     }
-    return null;
-  };
+  }
 
-  const persistUser = (data) => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      return true;
-    } catch (error) {
-      console.warn("Could not save settings", error);
-      return false;
+  async function saveProfile(payload) {
+    if (!settingsBridge || typeof settingsBridge.invoke !== "function") {
+      throw new Error("Profile bridge unavailable. Launch the desktop app.");
     }
-  };
-
-  const showStatus = (message) => {
-    if (statusEl) {
-      statusEl.textContent = message;
+    const response = await settingsBridge.invoke("userProfile:save", payload);
+    if (!response?.ok) {
+      throw new Error(response?.error || "Unable to save profile.");
     }
-  };
+    return response.data;
+  }
 
-  const savedUser = loadUser();
-  populateForm(savedUser);
-
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-    const ok = persistUser(data);
-    if (ok) {
-      showStatus(`Saved at ${new Date().toLocaleTimeString()}`);
-    } else {
-      showStatus("Could not save changes. Please try again.");
+    setFeedback("");
+
+    const originalLabel = submitButton?.textContent;
+
+    try {
+      const payload = collectPayload();
+
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Saving...";
+      }
+
+      const savedProfile = await saveProfile(payload);
+      populateForm(savedProfile);
+      setFeedback("Profile updated successfully.", "success");
+    } catch (error) {
+      console.error("Profile save failed:", error);
+      setFeedback(error.message || "Unable to save profile.", "error");
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        if (originalLabel) {
+          submitButton.textContent = originalLabel;
+        }
+      }
     }
   });
+
+  loadProfile();
 });

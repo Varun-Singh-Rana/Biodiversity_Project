@@ -71,9 +71,10 @@
         </nav>
         <div class="user-area">
           <div class="user-meta">
-            <span class="user-name">Varun Rana</span>
+            <span class="user-name" id="user-name">EcoWatch Ranger</span>
+            <span class="user-role" id="user-role">—</span>
           </div>
-          <div class="user-avatar" aria-hidden="true">VR</div>
+          <div class="user-avatar" aria-hidden="true" id="user-avatar">EW</div>
         </div>
       </header>
 
@@ -116,7 +117,7 @@
               </span>
             </div>
             <p>Active Alerts</p>
-            <strong>3 regions</strong>
+            <strong><span id="risk-high-count">0</span> regions</strong>
           </article>
           <article class="risk-tile risk-tile--medium">
             <div class="risk-tile__header">
@@ -128,7 +129,7 @@
               </span>
             </div>
             <p>Monitoring Required</p>
-            <strong>5 regions</strong>
+            <strong><span id="risk-medium-count">0</span> regions</strong>
           </article>
           <article class="risk-tile risk-tile--low">
             <div class="risk-tile__header">
@@ -140,7 +141,7 @@
               </span>
             </div>
             <p>Safe Zones</p>
-            <strong>12 regions</strong>
+            <strong><span id="risk-low-count">0</span> regions</strong>
           </article>
         </section>
 
@@ -156,108 +157,16 @@
               </p>
             </div>
           </header>
-          <ul class="prediction-list">
-            <li class="prediction-item">
-              <div class="prediction-item__header">
-                <div class="prediction-meta">
-                  <span
-                    class="risk-dot risk-dot--high"
-                    aria-hidden="true"
-                  ></span>
-                  <div>
-                    <h3>Chamoli District</h3>
-                    <span>Landslide Risk</span>
-                  </div>
-                </div>
-                <span class="probability probability--high"
-                  >87% Probability</span
-                >
-              </div>
-              <div class="prediction-bar" aria-hidden="true">
-                <span style="--fill: 0.87"></span>
-              </div>
-              <div class="prediction-factors" aria-label="Contributing factors">
-                <span class="factor-chip">Heavy rainfall</span>
-                <span class="factor-chip">Steep terrain</span>
-                <span class="factor-chip">Loose soil</span>
-              </div>
-            </li>
-            <li class="prediction-item">
-              <div class="prediction-item__header">
-                <div class="prediction-meta">
-                  <span
-                    class="risk-dot risk-dot--medium"
-                    aria-hidden="true"
-                  ></span>
-                  <div>
-                    <h3>Pithoragarh Valley</h3>
-                    <span>Flood Risk</span>
-                  </div>
-                </div>
-                <span class="probability probability--medium"
-                  >62% Probability</span
-                >
-              </div>
-              <div class="prediction-bar" aria-hidden="true">
-                <span style="--fill: 0.62"></span>
-              </div>
-              <div class="prediction-factors">
-                <span class="factor-chip">Increased river flow</span>
-                <span class="factor-chip">Snowmelt</span>
-                <span class="factor-chip">Monsoon</span>
-              </div>
-            </li>
-            <li class="prediction-item">
-              <div class="prediction-item__header">
-                <div class="prediction-meta">
-                  <span
-                    class="risk-dot risk-dot--medium"
-                    aria-hidden="true"
-                  ></span>
-                  <div>
-                    <h3>Tehri Region</h3>
-                    <span>Earthquake Risk</span>
-                  </div>
-                </div>
-                <span class="probability probability--medium"
-                  >58% Probability</span
-                >
-              </div>
-              <div class="prediction-bar" aria-hidden="true">
-                <span style="--fill: 0.58"></span>
-              </div>
-              <div class="prediction-factors">
-                <span class="factor-chip">Seismic activity</span>
-                <span class="factor-chip">Fault line proximity</span>
-              </div>
-            </li>
-            <li class="prediction-item">
-              <div class="prediction-item__header">
-                <div class="prediction-meta">
-                  <span
-                    class="risk-dot risk-dot--low"
-                    aria-hidden="true"
-                  ></span>
-                  <div>
-                    <h3>Nainital Area</h3>
-                    <span>Landslide Risk</span>
-                  </div>
-                </div>
-                <span class="probability probability--low"
-                  >28% Probability</span
-                >
-              </div>
-              <div class="prediction-bar" aria-hidden="true">
-                <span style="--fill: 0.28"></span>
-              </div>
-              <div class="prediction-factors">
-                <span class="factor-chip">Stable terrain</span>
-                <span class="factor-chip">Good drainage</span>
-              </div>
+          <ul
+            class="prediction-list"
+            id="prediction-list"
+            data-empty-message="No AI predictions yet. Submit field data to generate insights."
+          >
+            <li class="prediction-item prediction-item--empty">
+              No AI predictions yet. Submit field data to generate insights.
             </li>
           </ul>
         </section>
-
         <section class="insights-panel" aria-label="Environmental insights">
           <div class="tab-controls" role="tablist">
             <button
@@ -390,24 +299,38 @@
               </div>
               <div class="insight-highlights">
                 <article class="insight-highlight">
-                  <span class="highlight-label">Total Rainfall (Jan-Oct)</span>
-                  <strong class="highlight-value">1,828 mm</strong>
-                  <span class="highlight-tag highlight-tag--up"
-                    >+12% above normal</span
+                  <span class="highlight-label">Total Field Observations</span>
+                  <strong
+                    class="highlight-value"
+                    id="insight-total-observations"
+                    >0</strong
+                  >
+                  <span
+                    class="highlight-tag highlight-tag--up"
+                    id="insight-total-trend"
+                    >Awaiting data</span
                   >
                 </article>
                 <article class="insight-highlight">
-                  <span class="highlight-label">Flood Risk Assessment</span>
-                  <strong class="highlight-value">Elevated in monsoon</strong>
-                  <span class="highlight-tag highlight-tag--alert"
-                    >Action Required</span
+                  <span class="highlight-label">High Risk Alerts</span>
+                  <strong class="highlight-value" id="insight-high-risk-count"
+                    >0</strong
+                  >
+                  <span
+                    class="highlight-tag highlight-tag--alert"
+                    id="insight-high-risk-meta"
+                    >No urgent events</span
                   >
                 </article>
                 <article class="insight-highlight">
-                  <span class="highlight-label">Safe Reservoir Levels</span>
-                  <strong class="highlight-value">78%</strong>
-                  <span class="highlight-tag highlight-tag--stable"
-                    >Stable</span
+                  <span class="highlight-label">Most Impacted Region</span>
+                  <strong class="highlight-value" id="insight-top-region"
+                    >—</strong
+                  >
+                  <span
+                    class="highlight-tag highlight-tag--stable"
+                    id="insight-top-region-meta"
+                    >Waiting for analytics</span
                   >
                 </article>
               </div>

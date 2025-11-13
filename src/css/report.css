@@ -151,6 +151,11 @@ button {
   font-weight: 600;
 }
 
+.user-role {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
 .user-avatar {
   width: 42px;
   height: 42px;
@@ -208,6 +213,18 @@ button {
 .ghost--compact {
   padding: 0.45rem 1.05rem;
   font-size: 0.9rem;
+}
+
+.ghost--compact {
+  background: var(--surface);
+  border-style: solid;
+  border-color: var(--border);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+}
+
+.ghost--compact:hover {
+  background: var(--surface-muted);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
 }
 
 .content {
@@ -676,9 +693,18 @@ textarea:focus {
   background: rgba(241, 245, 249, 0.6);
 }
 
+.reports-table__empty td {
+  text-align: center;
+  padding: 2.25rem 1rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 .table-actions {
   display: flex;
   gap: 0.5rem;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .summary-grid {
@@ -827,6 +853,7 @@ textarea:focus {
   border-radius: var(--radius-pill);
   font-size: 0.85rem;
   font-weight: 600;
+  border: 1px solid transparent;
 }
 
 .status-pill--synced {
@@ -837,6 +864,27 @@ textarea:focus {
 .status-pill--pending {
   background: var(--brand-yellow-light);
   color: var(--brand-yellow);
+}
+
+.status-pill--routine {
+  background: var(--surface-muted);
+  color: var(--text-secondary);
+}
+
+.status-pill--important {
+  background: var(--brand-yellow-light);
+  color: var(--brand-yellow);
+}
+
+.status-pill--urgent {
+  background: var(--brand-red-light);
+  color: var(--brand-red);
+}
+
+.status-pill--draft {
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  color: var(--text-muted);
 }
 
 @media (max-width: 960px) {

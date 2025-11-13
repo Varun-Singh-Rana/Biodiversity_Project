@@ -69,9 +69,10 @@
         </nav>
         <div class="user-area">
           <div class="user-meta">
-            <span class="user-name">Varun Rana</span>
+            <span class="user-name" id="user-name">EcoWatch Ranger</span>
+            <span class="user-role" id="user-role">—</span>
           </div>
-          <div class="user-avatar" aria-hidden="true">VR</div>
+          <div class="user-avatar" aria-hidden="true" id="user-avatar">EW</div>
         </div>
       </header>
 
@@ -86,7 +87,7 @@
             <div class="stat-body">
               <span class="stat-title">Protected Areas</span>
               <span class="stat-value">Total Coverage</span>
-              <span class="stat-detail">12,485 km²</span>
+              <span class="stat-detail" id="stat-protected-areas">—</span>
             </div>
           </article>
           <article class="stat-card">
@@ -101,7 +102,7 @@
             <div class="stat-body">
               <span class="stat-title">Species Tracked</span>
               <span class="stat-value">Active Monitoring</span>
-              <span class="stat-detail">2,847 species</span>
+              <span class="stat-detail" id="stat-species-tracked">—</span>
             </div>
           </article>
           <article class="stat-card">
@@ -113,7 +114,7 @@
             <div class="stat-body">
               <span class="stat-title">Risk Alerts</span>
               <span class="stat-value">Active Warnings</span>
-              <span class="stat-detail">7 alerts</span>
+              <span class="stat-detail" id="stat-risk-alerts">—</span>
             </div>
           </article>
           <article class="stat-card">
@@ -127,7 +128,7 @@
             <div class="stat-body">
               <span class="stat-title">Field Reports</span>
               <span class="stat-value">This Week</span>
-              <span class="stat-detail">142 entries</span>
+              <span class="stat-detail" id="stat-reports-week">—</span>
             </div>
           </article>
         </section>
@@ -159,32 +160,13 @@
                   alt="Illustrated map of Uttarakhand forest zones"
                 />
                 <!-- markers overlay -->
-                <div class="map-markers">
-                  <button
-                    class="marker marker--safe"
-                    style="--x: 18%; --y: 30%"
-                    aria-label="Protected zone"
-                  ></button>
-                  <button
-                    class="marker marker--danger"
-                    style="--x: 36%; --y: 38%"
-                    aria-label="High risk area"
-                  ></button>
-                  <button
-                    class="marker marker--medium"
-                    style="--x: 57%; --y: 52%"
-                    aria-label="Medium risk area"
-                  ></button>
-                  <button
-                    class="marker marker--safe"
-                    style="--x: 71%; --y: 45%"
-                    aria-label="Protected zone"
-                  ></button>
-                  <button
-                    class="marker marker--safe marker--large"
-                    style="--x: 66%; --y: 74%"
-                    aria-label="Protected zone (cluster)"
-                  ></button>
+                <div class="map-markers" id="map-markers">
+                  <div
+                    class="map-marker-placeholder"
+                    id="map-marker-placeholder"
+                  >
+                    Awaiting live geospatial data
+                  </div>
                 </div>
               </div>
               <div class="map-controls" role="group" aria-label="Zoom controls">
@@ -239,69 +221,20 @@
 
               <!-- NEW: scrollable container -->
               <div class="alerts-scroll">
-                <ul class="alert-list">
-                  <li class="alert-item alert-item--critical">
-                    <div class="alert-meta">
-                      <span class="alert-type">Landslide Risk</span>
-                      <span class="alert-location">Chamoli District</span>
-                    </div>
-                    <span class="alert-time">2 hours ago</span>
-                  </li>
-                  <li class="alert-item alert-item--critical">
-                    <div class="alert-meta">
-                      <span class="alert-type">Tiger Sighting</span>
-                      <span class="alert-location">Jim Corbett NP</span>
-                    </div>
-                    <span class="alert-time">4 hours ago</span>
-                  </li>
-                  <li class="alert-item alert-item--critical">
-                    <div class="alert-meta">
-                      <span class="alert-type">Heavy Rainfall Alert</span>
-                      <span class="alert-location">Pithoragarh</span>
-                    </div>
-                    <span class="alert-time">6 hours ago</span>
-                  </li>
-                  <li class="alert-item alert-item--critical">
-                    <div class="alert-meta">
-                      <span class="alert-type">Safe Zone Confirmed</span>
-                      <span class="alert-location">Nainital</span>
-                    </div>
-                    <span class="alert-time">1 day ago</span>
+                <ul class="alert-list" id="alert-critical-list">
+                  <li class="alert-item alert-item--placeholder">
+                    <span
+                      >No alerts available yet. Submit field data to see
+                      updates.</span
+                    >
                   </li>
                 </ul>
-                <ul class="alert-list alert-list--secondary">
-                  <li class="alert-item alert-item--field">
-                    <div class="alert-meta">
-                      <span class="alert-type">Field Update</span>
-                      <span class="alert-location">Snow Leopard Spotted</span>
-                      <span class="alert-note"
-                        >Location: Nanda Devi National Park</span
-                      >
-                      <span class="alert-note">Reported by: Dr. R. Sharma</span>
-                    </div>
-                    <span class="alert-time">3 hours ago</span>
-                  </li>
-                  <li class="alert-item alert-item--field">
-                    <div class="alert-meta">
-                      <span class="alert-type">System Alert</span>
-                      <span class="alert-location"
-                        >Vegetation Index Updated</span
-                      >
-                      <span class="alert-note"
-                        >New NDVI data available for Q4 2025</span
-                      >
-                    </div>
-                    <span class="alert-time">5 hours ago</span>
-                  </li>
-                  <li class="alert-item alert-item--field">
-                    <div class="alert-meta">
-                      <span class="alert-type">Weather Alert</span>
-                      <span class="alert-location">Heavy Monsoon Expected</span>
-                      <span class="alert-note"
-                        >Dehradun &amp; Haridwar districts</span
-                      >
-                    </div>
-                    <span class="alert-time">8 hours ago</span>
+                <ul
+                  class="alert-list alert-list--secondary"
+                  id="alert-field-list"
+                >
+                  <li class="alert-item alert-item--placeholder">
+                    <span>Waiting for system updates...</span>
                   </li>
                 </ul>
               </div>
@@ -318,36 +251,11 @@
                 <p>Live risk categorisation by district</p>
               </div>
             </header>
-            <ul class="risk-list">
-              <li class="risk-row">
-                <div class="risk-info">
-                  <span class="risk-dot risk-dot--high"></span>
-                  <div>
-                    <span class="risk-zone">Zone A - Chamoli</span>
-                    <span class="risk-type">Landslide Risk</span>
-                  </div>
-                </div>
-                <span class="risk-level risk-level--high">High</span>
-              </li>
-              <li class="risk-row">
-                <div class="risk-info">
-                  <span class="risk-dot risk-dot--medium"></span>
-                  <div>
-                    <span class="risk-zone">Zone B - Pithoragarh</span>
-                    <span class="risk-type">Flood Risk</span>
-                  </div>
-                </div>
-                <span class="risk-level risk-level--medium">Medium</span>
-              </li>
-              <li class="risk-row">
-                <div class="risk-info">
-                  <span class="risk-dot risk-dot--low"></span>
-                  <div>
-                    <span class="risk-zone">Zone C - Uttarkashi</span>
-                    <span class="risk-type">Earthquake Risk</span>
-                  </div>
-                </div>
-                <span class="risk-level risk-level--low">Low</span>
+            <ul class="risk-list" id="risk-list">
+              <li class="risk-row risk-row--placeholder">
+                <span
+                  >No risk data yet. Field submissions will appear here.</span
+                >
               </li>
             </ul>
           </article>

@@ -69,9 +69,10 @@
         </nav>
         <div class="user-area">
           <div class="user-meta">
-            <span class="user-name">Varun Rana</span>
+            <span class="user-name" id="user-name">EcoWatch Ranger</span>
+            <span class="user-role" id="user-role">—</span>
           </div>
-          <div class="user-avatar" aria-hidden="true">VR</div>
+          <div class="user-avatar" aria-hidden="true" id="user-avatar">EW</div>
         </div>
       </header>
 
@@ -267,7 +268,11 @@
           <header class="reports-card__head">
             <div>
               <h2 id="available-reports-title">Available Reports</h2>
-              <p>Showing 6 reports | Last updated: Oct 24, 2025</p>
+              <p>
+                Showing <span id="reports-count">0</span> reports | Last
+                updated:
+                <span id="reports-updated">—</span>
+              </p>
             </div>
             <a class="link" href="#">View archive</a>
           </header>
@@ -285,131 +290,14 @@
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>RPT-2025-001</td>
-                  <td>Monthly Biodiversity Assessment - October 2025</td>
-                  <td><span class="chip chip--success">Biodiversity</span></td>
-                  <td>All Districts</td>
-                  <td>Oct 24, 2025</td>
-                  <td>
-                    <span class="status-pill status-pill--synced"
-                      >Available</span
-                    >
-                  </td>
-                  <td>2.4 MB</td>
-                  <td class="table-actions">
-                    <button type="button" class="ghost ghost--compact">
-                      View
-                    </button>
-                    <button type="button" class="primary primary--compact">
-                      PDF
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>RPT-2025-002</td>
-                  <td>Disaster Risk Analysis - Q4 2025</td>
-                  <td><span class="chip chip--danger">Disaster Risk</span></td>
-                  <td>Chamoli, Uttarkashi</td>
-                  <td>Oct 15, 2025</td>
-                  <td>
-                    <span class="status-pill status-pill--synced"
-                      >Available</span
-                    >
-                  </td>
-                  <td>3.1 MB</td>
-                  <td class="table-actions">
-                    <button type="button" class="ghost ghost--compact">
-                      View
-                    </button>
-                    <button type="button" class="primary primary--compact">
-                      PDF
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>RPT-2025-003</td>
-                  <td>Tiger Population Survey - Jim Corbett NP</td>
-                  <td><span class="chip chip--success">Species</span></td>
-                  <td>Jim Corbett</td>
-                  <td>Oct 10, 2025</td>
-                  <td>
-                    <span class="status-pill status-pill--synced"
-                      >Available</span
-                    >
-                  </td>
-                  <td>1.8 MB</td>
-                  <td class="table-actions">
-                    <button type="button" class="ghost ghost--compact">
-                      View
-                    </button>
-                    <button type="button" class="primary primary--compact">
-                      PDF
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>RPT-2025-004</td>
-                  <td>Forest Cover Change Detection - September</td>
-                  <td><span class="chip">Vegetation</span></td>
-                  <td>All Districts</td>
-                  <td>Oct 1, 2025</td>
-                  <td>
-                    <span class="status-pill status-pill--pending"
-                      >Processing</span
-                    >
-                  </td>
-                  <td>4.2 MB</td>
-                  <td class="table-actions">
-                    <button type="button" class="ghost ghost--compact">
-                      View
-                    </button>
-                    <button type="button" class="primary primary--compact">
-                      PDF
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>RPT-2025-005</td>
-                  <td>Human-Wildlife Conflict Report</td>
-                  <td><span class="chip chip--danger">Incident</span></td>
-                  <td>Multiple</td>
-                  <td>Sep 28, 2025</td>
-                  <td>
-                    <span class="status-pill status-pill--synced"
-                      >Available</span
-                    >
-                  </td>
-                  <td>1.5 MB</td>
-                  <td class="table-actions">
-                    <button type="button" class="ghost ghost--compact">
-                      View
-                    </button>
-                    <button type="button" class="primary primary--compact">
-                      PDF
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>RPT-2025-006</td>
-                  <td>Annual Conservation Progress Report</td>
-                  <td><span class="chip chip--success">Biodiversity</span></td>
-                  <td>All Districts</td>
-                  <td>Sep 15, 2025</td>
-                  <td>
-                    <span class="status-pill status-pill--synced"
-                      >Available</span
-                    >
-                  </td>
-                  <td>5.8 MB</td>
-                  <td class="table-actions">
-                    <button type="button" class="ghost ghost--compact">
-                      View
-                    </button>
-                    <button type="button" class="primary primary--compact">
-                      PDF
-                    </button>
+              <tbody
+                id="reports-table-body"
+                data-empty-message="No reports available yet. Submit field data to generate reports."
+              >
+                <tr class="reports-table__empty">
+                  <td colspan="8">
+                    No reports available yet. Submit field data to generate
+                    reports.
                   </td>
                 </tr>
               </tbody>
@@ -420,23 +308,31 @@
         <section class="summary-grid" aria-label="Report statistics">
           <article class="summary-card">
             <span class="summary-label">Total Reports Generated</span>
-            <strong class="summary-value">284</strong>
-            <span class="summary-meta">This year</span>
+            <strong class="summary-value" id="reports-total">0</strong>
+            <span class="summary-meta" id="reports-total-meta"
+              >Across all observations</span
+            >
           </article>
           <article class="summary-card">
             <span class="summary-label">Most Downloaded</span>
-            <strong class="summary-value">Biodiversity Reports</strong>
-            <span class="summary-meta">1,247 downloads</span>
+            <strong class="summary-value" id="reports-top-category">—</strong>
+            <span class="summary-meta" id="reports-top-category-meta"
+              >Awaiting data</span
+            >
           </article>
           <article class="summary-card">
             <span class="summary-label">Recent Activity</span>
-            <strong class="summary-value">23</strong>
-            <span class="summary-meta">New reports in last 7 days</span>
+            <strong class="summary-value" id="reports-recent">0</strong>
+            <span class="summary-meta" id="reports-recent-meta"
+              >New reports in last 7 days</span
+            >
           </article>
           <article class="summary-card">
             <span class="summary-label">Pending Publications</span>
-            <strong class="summary-value">6</strong>
-            <span class="summary-meta">Awaiting review</span>
+            <strong class="summary-value" id="reports-drafts">0</strong>
+            <span class="summary-meta" id="reports-drafts-meta"
+              >Drafts awaiting final review</span
+            >
           </article>
         </section>
 

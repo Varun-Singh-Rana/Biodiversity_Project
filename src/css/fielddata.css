@@ -151,6 +151,11 @@ button {
   font-weight: 600;
 }
 
+.user-role {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
 .user-avatar {
   width: 42px;
   height: 42px;
