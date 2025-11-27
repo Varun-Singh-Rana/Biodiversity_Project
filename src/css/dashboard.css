@@ -630,6 +630,108 @@ button {
   grid-column: 1 / 2;
 }
 
+.environment-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(15, 23, 42, 0.05);
+  box-shadow: var(--shadow-soft);
+  padding-bottom: 1.75rem;
+}
+
+.environment-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 0 1.75rem;
+}
+
+.environment-updated {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  align-self: center;
+}
+
+.environment-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.environment-metric {
+  background: var(--surface-muted);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.metric-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.metric-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.metric-meta {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.environment-panels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.environment-panel {
+  background: var(--surface-muted);
+  border-radius: var(--radius-sm);
+  padding: 1.1rem 1.25rem;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.environment-panel h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.environment-text {
+  margin: 0.65rem 0 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.environment-list {
+  margin: 0.75rem 0 0;
+  padding-left: 1.25rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.environment-list li + li {
+  margin-top: 0.35rem;
+}
+
+.environment-panel--errors {
+  border-color: rgba(220, 38, 38, 0.35);
+  background: var(--brand-red-light);
+}
+
+.environment-panel--errors h3 {
+  color: var(--brand-red);
+}
+
+.environment-panel--errors .environment-list {
+  color: var(--brand-red);
+}
+
 .risk-list {
   list-style: none;
   margin: 1.2rem 1.75rem 0;
@@ -736,6 +838,14 @@ button {
   .bottom-grid {
     margin-top: 0;
   }
+
+  .environment-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .environment-panels {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 960px) {
@@ -764,6 +874,10 @@ button {
 
   .map-tabs {
     padding: 0 1.25rem;
+  }
+
+  .environment-metrics {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -801,5 +915,9 @@ button {
 
   .user-area {
     flex-direction: column;
+  }
+
+  .environment-body {
+    padding: 0 1.25rem;
   }
 }

@@ -77,6 +77,71 @@
       </header>
 
       <main class="content">
+        <section
+          class="environment-banner"
+          aria-labelledby="environment-banner-title"
+          aria-live="polite"
+        >
+          <header class="environment-banner__head">
+            <div>
+              <h2 id="environment-banner-title">Field Conditions</h2>
+              <p>Live IMD alerts and seismic activity for Uttarakhand</p>
+            </div>
+            <span
+              class="environment-banner__timestamp"
+              id="environment-banner-updated"
+              >—</span
+            >
+          </header>
+          <div class="environment-banner__metrics">
+            <article class="environment-banner__metric">
+              <span class="metric-label">Temperature</span>
+              <strong class="metric-value" id="environment-banner-temperature"
+                >—</strong
+              >
+              <span class="metric-meta" id="environment-banner-condition"
+                >Condition unavailable</span
+              >
+            </article>
+            <article class="environment-banner__metric">
+              <span class="metric-label">Humidity</span>
+              <strong class="metric-value" id="environment-banner-humidity"
+                >—</strong
+              >
+              <span class="metric-meta" id="environment-banner-rainfall"
+                >Rainfall: —</span
+              >
+            </article>
+            <article class="environment-banner__metric">
+              <span class="metric-label">Air Quality</span>
+              <strong class="metric-value" id="environment-banner-aqi"
+                >—</strong
+              >
+              <span class="metric-meta" id="environment-banner-aqi-category"
+                >Awaiting feed</span
+              >
+            </article>
+          </div>
+          <div class="environment-banner__details">
+            <p class="environment-banner__alert" id="environment-banner-alert">
+              Loading alerts…
+            </p>
+            <p
+              class="environment-banner__seismic"
+              id="environment-banner-seismic"
+            >
+              Monitoring seismic feed…
+            </p>
+          </div>
+          <div
+            class="environment-banner__issues"
+            id="environment-banner-issues"
+            hidden
+          >
+            <span>Environmental feeds unavailable.</span>
+          </div>
+        </section>
+
         <section class="quick-actions" aria-label="Field actions">
           <article class="action-card">
             <div class="action-icon" aria-hidden="true">📷</div>

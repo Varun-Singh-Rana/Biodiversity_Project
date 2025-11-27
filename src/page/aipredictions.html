@@ -106,6 +106,65 @@
           </button>
         </section>
 
+        <section
+          class="environment-strip"
+          aria-labelledby="environment-strip-title"
+          aria-live="polite"
+        >
+          <div class="environment-strip__header">
+            <h2 id="environment-strip-title">Live Environmental Signals</h2>
+            <span
+              class="environment-strip__timestamp"
+              id="environment-strip-updated"
+              >—</span
+            >
+          </div>
+          <div class="environment-strip__grid">
+            <article class="environment-strip__metric">
+              <span class="metric-label">Temperature</span>
+              <strong class="metric-value" id="environment-strip-temperature"
+                >—</strong
+              >
+              <span class="metric-meta" id="environment-strip-condition"
+                >Condition unavailable</span
+              >
+            </article>
+            <article class="environment-strip__metric">
+              <span class="metric-label">Humidity</span>
+              <strong class="metric-value" id="environment-strip-humidity"
+                >—</strong
+              >
+              <span class="metric-meta" id="environment-strip-rainfall"
+                >Rainfall: —</span
+              >
+            </article>
+            <article class="environment-strip__metric">
+              <span class="metric-label">Air Quality</span>
+              <strong class="metric-value" id="environment-strip-aqi">—</strong>
+              <span class="metric-meta" id="environment-strip-aqi-category"
+                >Awaiting feed</span
+              >
+            </article>
+          </div>
+          <div class="environment-strip__alerts">
+            <div class="environment-strip__alert">
+              <span class="alert-label">IMD Alert</span>
+              <p id="environment-strip-alert">Loading alerts…</p>
+            </div>
+            <div class="environment-strip__alert">
+              <span class="alert-label">Seismic Feed</span>
+              <p id="environment-strip-earthquake">Checking seismic feed…</p>
+            </div>
+          </div>
+          <div
+            class="environment-strip__issues"
+            id="environment-strip-issues"
+            hidden
+          >
+            <span>Environmental feeds unavailable.</span>
+          </div>
+        </section>
+
         <section class="risk-overview" aria-label="Risk summary">
           <article class="risk-tile risk-tile--high">
             <div class="risk-tile__header">

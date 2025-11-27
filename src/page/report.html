@@ -95,6 +95,74 @@
           </button>
         </section>
 
+        <section
+          class="environment-summary"
+          aria-labelledby="environment-summary-title"
+          aria-live="polite"
+        >
+          <header class="environment-summary__head">
+            <div>
+              <h2 id="environment-summary-title">Source Feeds Snapshot</h2>
+              <p>Live context from IMD and National Seismic Network</p>
+            </div>
+            <span
+              class="environment-summary__timestamp"
+              id="environment-summary-updated"
+              >—</span
+            >
+          </header>
+          <div class="environment-summary__grid">
+            <article class="environment-summary__metric">
+              <span class="metric-label">Temperature</span>
+              <strong class="metric-value" id="environment-summary-temperature"
+                >—</strong
+              >
+              <span class="metric-meta" id="environment-summary-condition"
+                >Condition unavailable</span
+              >
+            </article>
+            <article class="environment-summary__metric">
+              <span class="metric-label">Humidity</span>
+              <strong class="metric-value" id="environment-summary-humidity"
+                >—</strong
+              >
+              <span class="metric-meta" id="environment-summary-rainfall"
+                >Rainfall: —</span
+              >
+            </article>
+            <article class="environment-summary__metric">
+              <span class="metric-label">Air Quality</span>
+              <strong class="metric-value" id="environment-summary-aqi"
+                >—</strong
+              >
+              <span class="metric-meta" id="environment-summary-aqi-category"
+                >Awaiting feed</span
+              >
+            </article>
+          </div>
+          <div class="environment-summary__alerts">
+            <div class="environment-summary__alert">
+              <h3>IMD Alert Summary</h3>
+              <p id="environment-summary-alert">Loading alerts…</p>
+              <ul
+                class="environment-summary__list"
+                id="environment-summary-alert-list"
+              ></ul>
+            </div>
+            <div class="environment-summary__alert">
+              <h3>Recent Seismic Activity</h3>
+              <p id="environment-summary-earthquake">Checking seismic feed…</p>
+            </div>
+          </div>
+          <div
+            class="environment-summary__issues"
+            id="environment-summary-issues"
+            hidden
+          >
+            <span>Environmental feeds unavailable.</span>
+          </div>
+        </section>
+
         <section class="quick-actions" aria-label="Quick report downloads">
           <article class="action-card">
             <div class="action-icon action-icon--forest" aria-hidden="true">

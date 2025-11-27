@@ -259,6 +259,67 @@
               </li>
             </ul>
           </article>
+          <article
+            class="environment-card"
+            aria-labelledby="environment-title"
+            id="environment-card"
+          >
+            <header class="card-header">
+              <div>
+                <h2 id="environment-title">Environmental Conditions</h2>
+                <p>Live feeds from IMD &amp; National Seismic Network</p>
+              </div>
+              <span class="environment-updated" id="environment-updated"
+                >—</span
+              >
+            </header>
+            <div class="environment-body">
+              <div class="environment-metrics">
+                <article class="environment-metric">
+                  <span class="metric-label">Temperature</span>
+                  <strong class="metric-value" id="env-temperature">—</strong>
+                  <span class="metric-meta" id="env-condition"
+                    >Waiting for update</span
+                  >
+                </article>
+                <article class="environment-metric">
+                  <span class="metric-label">Humidity</span>
+                  <strong class="metric-value" id="env-humidity">—</strong>
+                  <span class="metric-meta" id="env-rainfall">Rainfall: —</span>
+                </article>
+                <article class="environment-metric">
+                  <span class="metric-label">Air Quality</span>
+                  <strong class="metric-value" id="env-aqi">—</strong>
+                  <span class="metric-meta" id="env-aqi-category"
+                    >Awaiting IMD feed</span
+                  >
+                </article>
+              </div>
+              <div class="environment-panels">
+                <section class="environment-panel" aria-live="polite">
+                  <h3>IMD Alerts</h3>
+                  <p class="environment-text" id="env-alert-summary">
+                    Loading alerts…
+                  </p>
+                  <ul class="environment-list" id="env-alert-list"></ul>
+                </section>
+                <section class="environment-panel" aria-live="polite">
+                  <h3>Recent Seismic Activity</h3>
+                  <p class="environment-text" id="env-earthquake">
+                    Checking seismic feed…
+                  </p>
+                </section>
+              </div>
+              <section
+                class="environment-panel environment-panel--errors"
+                id="environment-errors"
+                hidden
+              >
+                <h3>Data Issues</h3>
+                <ul class="environment-list" id="env-error-list"></ul>
+              </section>
+            </div>
+          </article>
         </section>
       </main>
     </div>

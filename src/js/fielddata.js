@@ -94,6 +94,221 @@ function getInitials(name) {
   return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
 }
 
+function formatTemperature(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return "—";
+  }
+  return `${Math.round(number)}°C`;
+}
+
+function formatHumidity(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return "—";
+  }
+  return `${Math.round(number)}%`;
+}
+
+function formatRainfall(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return "—";
+  }
+  if (number <= 0) {
+    return "None";
+  }
+  return `${number.toFixed(1)} mm`;
+}
+
+function mapConditionToWeatherOption(condition) {
+  const label = sanitiseText(condition).toLowerCase();
+  if (!label) {
+    return null;
+  }
+  if (label.includes("thunder") || label.includes("storm")) {
+    return "Stormy";
+  }
+  if (label.includes("rain") || label.includes("drizzle")) {
+    return "Rainy";
+  }
+  if (label.includes("snow")) {
+    return "Snowfall";
+  }
+  if (
+    label.includes("fog") ||
+    label.includes("mist") ||
+    label.includes("haze")
+  ) {
+    return "Foggy";
+  }
+  if (label.includes("cloud")) {
+    return "Cloudy";
+  }
+  if (label.includes("clear")) {
+    return "Clear";
+  }
+  return null;
+}
+
+function applyWeatherToForm(weather, temperatureInput, weatherSelect) {
+  if (!weather) {
+    return;
+  }
+
+  if (
+    temperatureInput &&
+    !temperatureInput.value &&
+    weather.temperature !== null &&
+    weather.temperature !== undefined
+  ) {
+    temperatureInput.value = Math.round(Number(weather.temperature)).toString();
+  }
+
+  if (weatherSelect && !weatherSelect.value && weather.condition) {
+    const mapped = mapConditionToWeatherOption(weather.condition);
+    if (mapped) {
+      const option = Array.from(weatherSelect.options).find(
+        (entry) => sanitiseText(entry.value) === mapped
+      );
+      if (option) {
+        weatherSelect.value = option.value;
+      }
+    }
+  }
+}
+
+function renderEnvironmentBanner(summary) {
+  const temperatureNode = document.getElementById(
+    "environment-banner-temperature"
+  );
+  const conditionNode = document.getElementById("environment-banner-condition");
+  const humidityNode = document.getElementById("environment-banner-humidity");
+  const rainfallNode = document.getElementById("environment-banner-rainfall");
+  const aqiNode = document.getElementById("environment-banner-aqi");
+  const aqiCategoryNode = document.getElementById(
+    "environment-banner-aqi-category"
+  );
+  const alertNode = document.getElementById("environment-banner-alert");
+  const seismicNode = document.getElementById("environment-banner-seismic");
+  const issuesNode = document.getElementById("environment-banner-issues");
+  const timestampNode = document.getElementById("environment-banner-updated");
+
+  const now = new Date();
+  if (timestampNode) {
+    timestampNode.textContent = `Updated ${now.toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+    })}`;
+  }
+
+  const weather = summary?.weather || null;
+  if (temperatureNode) {
+    temperatureNode.textContent = formatTemperature(weather?.temperature);
+  }
+  if (conditionNode) {
+    conditionNode.textContent = weather?.condition
+      ? weather.condition
+      : "Condition unavailable";
+  }
+  if (humidityNode) {
+    humidityNode.textContent = formatHumidity(weather?.humidity);
+  }
+  if (rainfallNode) {
+    rainfallNode.textContent = `Rainfall: ${formatRainfall(weather?.rainfall)}`;
+  }
+
+  const airQuality = summary?.airQuality || null;
+  if (aqiNode) {
+    aqiNode.textContent =
+      airQuality?.index && Number.isFinite(Number(airQuality.index))
+        ? airQuality.index.toString()
+        : "—";
+  }
+  if (aqiCategoryNode) {
+    aqiCategoryNode.textContent = airQuality?.category
+      ? airQuality.category
+      : "Air quality data unavailable";
+  }
+
+  if (alertNode) {
+    const alerts = summary?.alerts || null;
+    alertNode.textContent = alerts?.summary
+      ? alerts.summary
+      : "No major warnings from IMD.";
+  }
+
+  if (seismicNode) {
+    const earthquakes = Array.isArray(summary?.earthquakes)
+      ? summary.earthquakes
+      : [];
+    if (earthquakes.length) {
+      const latest = earthquakes[0];
+      const magnitude = Number.isFinite(Number(latest?.magnitude))
+        ? `Magnitude ${Number(latest.magnitude).toFixed(1)}`
+        : "Magnitude unavailable";
+      const location = latest?.location || "Uttarakhand";
+      const timeLabel = latest?.timestamp
+        ? new Intl.DateTimeFormat(undefined, {
+            hour: "2-digit",
+            minute: "2-digit",
+            day: "numeric",
+            month: "short",
+          }).format(new Date(latest.timestamp))
+        : "recent";
+      seismicNode.textContent = `${magnitude} near ${location} (${timeLabel})`;
+    } else {
+      seismicNode.textContent =
+        "No significant seismic activity recorded in the last 24 hours.";
+    }
+  }
+
+  if (issuesNode) {
+    const issues = Array.isArray(summary?.errors)
+      ? summary.errors.filter(Boolean)
+      : [];
+    if (issues.length) {
+      issuesNode.hidden = false;
+      issuesNode.textContent = issues.join(" · ");
+    } else {
+      issuesNode.hidden = true;
+      issuesNode.textContent = "";
+    }
+  }
+}
+
+function renderEnvironmentBannerError(message) {
+  const temperatureNode = document.getElementById(
+    "environment-banner-temperature"
+  );
+  const conditionNode = document.getElementById("environment-banner-condition");
+  const humidityNode = document.getElementById("environment-banner-humidity");
+  const rainfallNode = document.getElementById("environment-banner-rainfall");
+  const aqiNode = document.getElementById("environment-banner-aqi");
+  const aqiCategoryNode = document.getElementById(
+    "environment-banner-aqi-category"
+  );
+  const alertNode = document.getElementById("environment-banner-alert");
+  const seismicNode = document.getElementById("environment-banner-seismic");
+  const issuesNode = document.getElementById("environment-banner-issues");
+
+  if (temperatureNode) temperatureNode.textContent = "—";
+  if (conditionNode)
+    conditionNode.textContent = "Environmental feed unavailable";
+  if (humidityNode) humidityNode.textContent = "—";
+  if (rainfallNode) rainfallNode.textContent = "Rainfall: —";
+  if (aqiNode) aqiNode.textContent = "—";
+  if (aqiCategoryNode)
+    aqiCategoryNode.textContent = "Air quality data unavailable";
+  if (alertNode) alertNode.textContent = "Environmental feeds unavailable.";
+  if (seismicNode) seismicNode.textContent = "Seismic feed unavailable.";
+
+  if (issuesNode) {
+    issuesNode.hidden = false;
+    issuesNode.textContent = message || "Unable to load environmental data.";
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("field-data-form");
   if (!form) {
@@ -115,6 +330,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const latitudeInput = document.getElementById("field-latitude");
   const longitudeInput = document.getElementById("field-longitude");
+  const temperatureInput = document.getElementById("field-temperature");
+  const weatherSelect = document.getElementById("field-weather");
 
   const userNameNode = document.getElementById("user-name");
   const userRoleNode = document.getElementById("user-role");
@@ -406,6 +623,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  async function loadEnvironmentSummary() {
+    if (!fieldDataBridge || typeof fieldDataBridge.invoke !== "function") {
+      return;
+    }
+
+    try {
+      const response = await fieldDataBridge.invoke("environment:summary");
+      if (!response?.ok) {
+        throw new Error(
+          response?.error || "Failed to load environment summary"
+        );
+      }
+      const summary = response.data;
+      renderEnvironmentBanner(summary);
+      applyWeatherToForm(summary?.weather, temperatureInput, weatherSelect);
+    } catch (error) {
+      console.error("Failed to load environment summary:", error);
+      renderEnvironmentBannerError(error?.message);
+    }
+  }
+
   async function autoTagLocation() {
     if (!navigator.geolocation) {
       setFeedback("Geolocation not supported on this device.", "error");
@@ -539,4 +777,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadUserProfile();
   loadRecentEntries();
+  loadEnvironmentSummary();
 });

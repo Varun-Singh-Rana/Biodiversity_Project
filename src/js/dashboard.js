@@ -336,6 +336,198 @@ function setText(node, value) {
   node.textContent = value;
 }
 
+function formatTemperature(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return "—";
+  }
+  return `${Math.round(number)}°C`;
+}
+
+function formatHumidity(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return "—";
+  }
+  return `${Math.round(number)}%`;
+}
+
+function formatRainfall(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return "No data";
+  }
+  if (number <= 0) {
+    return "None";
+  }
+  return `${number.toFixed(1)} mm`;
+}
+
+function renderEnvironmentSummary(summary) {
+  const card = document.getElementById("environment-card");
+  if (!card) {
+    return;
+  }
+
+  const updatedNode = document.getElementById("environment-updated");
+  const temperatureNode = document.getElementById("env-temperature");
+  const conditionNode = document.getElementById("env-condition");
+  const humidityNode = document.getElementById("env-humidity");
+  const rainfallNode = document.getElementById("env-rainfall");
+  const aqiNode = document.getElementById("env-aqi");
+  const aqiCategoryNode = document.getElementById("env-aqi-category");
+  const alertSummaryNode = document.getElementById("env-alert-summary");
+  const alertListNode = document.getElementById("env-alert-list");
+  const earthquakeNode = document.getElementById("env-earthquake");
+  const errorsSection = document.getElementById("environment-errors");
+  const errorList = document.getElementById("env-error-list");
+
+  const now = new Date();
+  setText(
+    updatedNode,
+    `Updated ${now.toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+    })}`
+  );
+
+  const weather = summary?.weather || null;
+  setText(temperatureNode, formatTemperature(weather?.temperature));
+  setText(
+    conditionNode,
+    weather?.condition ? weather.condition : "Condition unavailable"
+  );
+  setText(humidityNode, formatHumidity(weather?.humidity));
+  setText(rainfallNode, `Rainfall: ${formatRainfall(weather?.rainfall)}`);
+
+  const airQuality = summary?.airQuality || null;
+  if (airQuality?.index) {
+    setText(aqiNode, airQuality.index.toString());
+    setText(aqiCategoryNode, airQuality.category || "Category unavailable");
+  } else {
+    setText(aqiNode, "—");
+    setText(aqiCategoryNode, "Air quality data unavailable");
+  }
+
+  if (alertListNode) {
+    alertListNode.innerHTML = "";
+  }
+
+  const alerts = summary?.alerts || null;
+  if (alerts?.summary) {
+    setText(alertSummaryNode, alerts.summary);
+  } else {
+    setText(alertSummaryNode, "No major warnings today.");
+  }
+
+  if (
+    alertListNode &&
+    Array.isArray(alerts?.notices) &&
+    alerts.notices.length
+  ) {
+    alertListNode.hidden = false;
+    alerts.notices.slice(0, 4).forEach((notice) => {
+      const item = document.createElement("li");
+      item.textContent = notice;
+      alertListNode.appendChild(item);
+    });
+  } else if (alertListNode) {
+    alertListNode.hidden = true;
+  }
+
+  if (earthquakeNode) {
+    const earthquakes = Array.isArray(summary?.earthquakes)
+      ? summary.earthquakes
+      : [];
+    if (earthquakes.length) {
+      const latest = earthquakes[0];
+      const magnitude =
+        Number(latest?.magnitude) && Number.isFinite(Number(latest.magnitude))
+          ? `Magnitude ${Number(latest.magnitude).toFixed(1)}`
+          : "Magnitude unavailable";
+      const location = latest?.location || "Uttarakhand";
+      const timeLabel = latest?.timestamp
+        ? formatRelativeTime(latest.timestamp)
+        : "recent";
+      setText(earthquakeNode, `${magnitude} near ${location} · ${timeLabel}`);
+    } else {
+      setText(
+        earthquakeNode,
+        "No significant seismic activity reported in the last 24 hours."
+      );
+    }
+  }
+
+  if (errorsSection && errorList) {
+    errorList.innerHTML = "";
+    const issues = Array.isArray(summary?.errors)
+      ? summary.errors.filter(Boolean)
+      : [];
+    if (issues.length) {
+      issues.slice(0, 4).forEach((issue) => {
+        const item = document.createElement("li");
+        item.textContent = issue;
+        errorList.appendChild(item);
+      });
+      errorsSection.hidden = false;
+    } else {
+      errorsSection.hidden = true;
+    }
+  }
+}
+
+function renderEnvironmentError(errorMessage) {
+  const temperatureNode = document.getElementById("env-temperature");
+  const conditionNode = document.getElementById("env-condition");
+  const humidityNode = document.getElementById("env-humidity");
+  const rainfallNode = document.getElementById("env-rainfall");
+  const aqiNode = document.getElementById("env-aqi");
+  const aqiCategoryNode = document.getElementById("env-aqi-category");
+  const alertSummaryNode = document.getElementById("env-alert-summary");
+  const alertListNode = document.getElementById("env-alert-list");
+  const earthquakeNode = document.getElementById("env-earthquake");
+  const errorsSection = document.getElementById("environment-errors");
+  const errorList = document.getElementById("env-error-list");
+
+  setText(temperatureNode, "—");
+  setText(conditionNode, "Environmental feed unavailable");
+  setText(humidityNode, "—");
+  setText(rainfallNode, "Rainfall: —");
+  setText(aqiNode, "—");
+  setText(aqiCategoryNode, "Air quality data unavailable");
+  setText(alertSummaryNode, "Environmental feeds unavailable.");
+  if (alertListNode) {
+    alertListNode.innerHTML = "";
+    alertListNode.hidden = true;
+  }
+  setText(earthquakeNode, "Seismic feed unavailable.");
+
+  if (errorsSection && errorList) {
+    errorsSection.hidden = false;
+    errorList.innerHTML = "";
+    const item = document.createElement("li");
+    item.textContent = errorMessage || "Unable to load environmental data.";
+    errorList.appendChild(item);
+  }
+}
+
+async function loadEnvironmentSummary() {
+  if (!dashboardBridge || typeof dashboardBridge.invoke !== "function") {
+    return;
+  }
+
+  try {
+    const response = await dashboardBridge.invoke("environment:summary");
+    if (!response?.ok) {
+      throw new Error(response?.error || "Failed to load environment summary");
+    }
+    renderEnvironmentSummary(response.data);
+  } catch (error) {
+    console.error("Failed to load environment summary:", error);
+    renderEnvironmentError(error?.message);
+  }
+}
+
 function renderStats(metrics, counts) {
   setText(
     document.getElementById("stat-protected-areas"),
@@ -700,4 +892,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initToggleGroups();
   loadUserProfile();
   loadFieldData();
+  loadEnvironmentSummary();
 });

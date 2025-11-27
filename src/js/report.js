@@ -143,6 +143,218 @@ function notifyComingSoon(featureLabel) {
   window.alert(message);
 }
 
+function formatTemperature(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return "—";
+  }
+  return `${Math.round(number)}°C`;
+}
+
+function formatHumidity(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return "—";
+  }
+  return `${Math.round(number)}%`;
+}
+
+function formatRainfall(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return "—";
+  }
+  if (number <= 0) {
+    return "None";
+  }
+  return `${number.toFixed(1)} mm`;
+}
+
+function formatRelativeTime(value) {
+  if (!value) {
+    return "recent";
+  }
+  const target = new Date(value);
+  if (Number.isNaN(target.getTime())) {
+    return "recent";
+  }
+  const diffMs = target.getTime() - Date.now();
+  const diffMinutes = Math.round(diffMs / (1000 * 60));
+  const formatter = new Intl.RelativeTimeFormat(undefined, {
+    numeric: "auto",
+  });
+  if (Math.abs(diffMinutes) < 60) {
+    return formatter.format(Math.round(diffMinutes), "minute");
+  }
+  const diffHours = Math.round(diffMinutes / 60);
+  if (Math.abs(diffHours) < 24) {
+    return formatter.format(diffHours, "hour");
+  }
+  const diffDays = Math.round(diffHours / 24);
+  return formatter.format(diffDays, "day");
+}
+
+function renderEnvironmentSummary(summary) {
+  const temperatureNode = document.getElementById(
+    "environment-summary-temperature"
+  );
+  const conditionNode = document.getElementById(
+    "environment-summary-condition"
+  );
+  const humidityNode = document.getElementById("environment-summary-humidity");
+  const rainfallNode = document.getElementById("environment-summary-rainfall");
+  const aqiNode = document.getElementById("environment-summary-aqi");
+  const aqiCategoryNode = document.getElementById(
+    "environment-summary-aqi-category"
+  );
+  const alertNode = document.getElementById("environment-summary-alert");
+  const alertListNode = document.getElementById(
+    "environment-summary-alert-list"
+  );
+  const earthquakeNode = document.getElementById(
+    "environment-summary-earthquake"
+  );
+  const timestampNode = document.getElementById("environment-summary-updated");
+  const issuesNode = document.getElementById("environment-summary-issues");
+
+  if (timestampNode) {
+    const now = new Date();
+    timestampNode.textContent = `Updated ${now.toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+    })}`;
+  }
+
+  const weather = summary?.weather || null;
+  if (temperatureNode) {
+    temperatureNode.textContent = formatTemperature(weather?.temperature);
+  }
+  if (conditionNode) {
+    conditionNode.textContent = weather?.condition
+      ? weather.condition
+      : "Condition unavailable";
+  }
+  if (humidityNode) {
+    humidityNode.textContent = formatHumidity(weather?.humidity);
+  }
+  if (rainfallNode) {
+    rainfallNode.textContent = `Rainfall: ${formatRainfall(weather?.rainfall)}`;
+  }
+
+  const airQuality = summary?.airQuality || null;
+  if (aqiNode) {
+    aqiNode.textContent =
+      airQuality?.index && Number.isFinite(Number(airQuality.index))
+        ? airQuality.index.toString()
+        : "—";
+  }
+  if (aqiCategoryNode) {
+    aqiCategoryNode.textContent = airQuality?.category
+      ? airQuality.category
+      : "Air quality data unavailable";
+  }
+
+  if (alertNode) {
+    const alerts = summary?.alerts || null;
+    alertNode.textContent = alerts?.summary
+      ? alerts.summary
+      : "No major warnings from IMD.";
+  }
+
+  if (alertListNode) {
+    alertListNode.innerHTML = "";
+    const notices = Array.isArray(summary?.alerts?.notices)
+      ? summary.alerts.notices.filter(Boolean)
+      : [];
+    if (notices.length) {
+      notices.slice(0, 4).forEach((notice) => {
+        const item = document.createElement("li");
+        item.textContent = notice;
+        alertListNode.appendChild(item);
+      });
+      alertListNode.hidden = false;
+    } else {
+      alertListNode.hidden = true;
+    }
+  }
+
+  if (earthquakeNode) {
+    const earthquakes = Array.isArray(summary?.earthquakes)
+      ? summary.earthquakes
+      : [];
+    if (earthquakes.length) {
+      const latest = earthquakes[0];
+      const magnitude = Number.isFinite(Number(latest?.magnitude))
+        ? `Magnitude ${Number(latest.magnitude).toFixed(1)}`
+        : "Magnitude unavailable";
+      const location = latest?.location || "Uttarakhand";
+      const timeLabel = latest?.timestamp
+        ? formatRelativeTime(latest.timestamp)
+        : "recent";
+      earthquakeNode.textContent = `${magnitude} near ${location} · ${timeLabel}`;
+    } else {
+      earthquakeNode.textContent =
+        "No significant seismic activity recorded in the last 24 hours.";
+    }
+  }
+
+  if (issuesNode) {
+    const issues = Array.isArray(summary?.errors)
+      ? summary.errors.filter(Boolean)
+      : [];
+    if (issues.length) {
+      issuesNode.hidden = false;
+      issuesNode.textContent = issues.join(" · ");
+    } else {
+      issuesNode.hidden = true;
+      issuesNode.textContent = "";
+    }
+  }
+}
+
+function renderEnvironmentSummaryError(message) {
+  const temperatureNode = document.getElementById(
+    "environment-summary-temperature"
+  );
+  const conditionNode = document.getElementById(
+    "environment-summary-condition"
+  );
+  const humidityNode = document.getElementById("environment-summary-humidity");
+  const rainfallNode = document.getElementById("environment-summary-rainfall");
+  const aqiNode = document.getElementById("environment-summary-aqi");
+  const aqiCategoryNode = document.getElementById(
+    "environment-summary-aqi-category"
+  );
+  const alertNode = document.getElementById("environment-summary-alert");
+  const alertListNode = document.getElementById(
+    "environment-summary-alert-list"
+  );
+  const earthquakeNode = document.getElementById(
+    "environment-summary-earthquake"
+  );
+  const issuesNode = document.getElementById("environment-summary-issues");
+
+  if (temperatureNode) temperatureNode.textContent = "—";
+  if (conditionNode)
+    conditionNode.textContent = "Environmental feed unavailable";
+  if (humidityNode) humidityNode.textContent = "—";
+  if (rainfallNode) rainfallNode.textContent = "Rainfall: —";
+  if (aqiNode) aqiNode.textContent = "—";
+  if (aqiCategoryNode)
+    aqiCategoryNode.textContent = "Air quality data unavailable";
+  if (alertNode) alertNode.textContent = "Environmental feeds unavailable.";
+  if (alertListNode) {
+    alertListNode.innerHTML = "";
+    alertListNode.hidden = true;
+  }
+  if (earthquakeNode) earthquakeNode.textContent = "Seismic feed unavailable.";
+
+  if (issuesNode) {
+    issuesNode.hidden = false;
+    issuesNode.textContent = message || "Unable to load environmental data.";
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const userNameNode = document.getElementById("user-name");
   const userRoleNode = document.getElementById("user-role");
@@ -396,4 +608,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadUserProfile();
   loadReports();
+
+  async function loadEnvironmentSummary() {
+    if (!reportsBridge || typeof reportsBridge.invoke !== "function") {
+      return;
+    }
+
+    try {
+      const response = await reportsBridge.invoke("environment:summary");
+      if (!response?.ok) {
+        throw new Error(
+          response?.error || "Failed to load environment summary"
+        );
+      }
+      renderEnvironmentSummary(response.data);
+    } catch (error) {
+      console.error("Failed to load environment summary:", error);
+      renderEnvironmentSummaryError(error?.message);
+    }
+  }
+
+  loadEnvironmentSummary();
 });

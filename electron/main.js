@@ -15,6 +15,7 @@ const {
   startDailyDigestScheduler,
   stopDailyDigestScheduler,
 } = require("../src/notification/scheduler");
+const { collectEnvironmentalSummary } = require("../src/notification/api");
 
 let mainWindow;
 
@@ -100,6 +101,24 @@ ipcMain.handle("fieldData:list", async (_event, options = {}) => {
     return { ok: true, data: rows };
   } catch (error) {
     console.error("[database] failed to list field data:", error);
+    return { ok: false, error: error.message };
+  }
+});
+
+ipcMain.handle("environment:summary", async (_event, options = {}) => {
+  try {
+    let targetCity = (options?.city || "").trim();
+    if (!targetCity) {
+      const profile = await getUserProfile();
+      if (profile?.city) {
+        targetCity = profile.city;
+      }
+    }
+
+    const summary = await collectEnvironmentalSummary(targetCity);
+    return { ok: true, data: summary };
+  } catch (error) {
+    console.error("[environment] failed to collect summary:", error);
     return { ok: false, error: error.message };
   }
 });
