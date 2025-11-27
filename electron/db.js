@@ -13,8 +13,27 @@ function resolveDatabasePath() {
     return path.resolve(process.env.SQLITE_DB_PATH);
   }
 
-  const defaultDir = path.join(__dirname, "..", "data");
-  return path.join(defaultDir, "ecowatch.sqlite");
+  let baseDir = null;
+
+  try {
+    const { app } = require("electron");
+    if (app) {
+      if (app.isPackaged) {
+        const userData = app.getPath("userData");
+        baseDir = path.join(userData, "EcoWatch");
+      } else {
+        baseDir = path.join(__dirname, "..", "data");
+      }
+    }
+  } catch (error) {
+    console.warn("[database] failed to resolve Electron app path:", error);
+  }
+
+  if (!baseDir) {
+    baseDir = path.join(process.cwd(), "data");
+  }
+
+  return path.join(baseDir, "ecowatch.sqlite");
 }
 
 function ensureDirectory(targetPath) {

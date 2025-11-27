@@ -1,5 +1,5 @@
 {
-  "name": "biodiversity_project",
+  "name": "EcoWatch",
   "version": "1.0.0",
   "description": "",
   "main": "electron/main.js",
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/Varun-Singh-Rana/Biodiversity_project#readme",
   "build": {
-    "productName": "Finlytics",
+    "productName": "EcoWatch",
     "directories": {
       "output": "dist"
     },
@@ -36,7 +36,8 @@
       {
         "from": "src/assets",
         "to": "assets"
-      }
+      },
+      ".env"
     ],
     "win": {
       "icon": "src/assets/logo.ico"

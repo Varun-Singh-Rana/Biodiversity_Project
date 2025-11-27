@@ -1,9 +1,9 @@
-let ipcRenderer = null;
+let loginBridge = null;
 
 if (typeof require === "function") {
   try {
     const electron = require("electron");
-    ipcRenderer = electron?.ipcRenderer ?? null;
+    loginBridge = electron?.ipcRenderer ?? null;
   } catch (error) {
     console.warn("IPC renderer not available:", error);
   }
@@ -84,13 +84,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function saveProfile(payload) {
-    if (!ipcRenderer || typeof ipcRenderer.invoke !== "function") {
+    if (!loginBridge || typeof loginBridge.invoke !== "function") {
       throw new Error(
         "Profile bridge is unavailable. Launch the app through Electron after installing dependencies."
       );
     }
 
-    const response = await ipcRenderer.invoke("userProfile:save", payload);
+    const response = await loginBridge.invoke("userProfile:save", payload);
     if (!response?.ok) {
       throw new Error(response?.error || "Unable to save profile.");
     }

@@ -50,7 +50,7 @@ function formatAqiSection(airQuality) {
   if (!airQuality?.index) {
     return "Air quality data unavailable.";
   }
-  return `Air Quality Index(/5): ${airQuality.index} (${airQuality.category}).`;
+  return `Air Quality Index: ${airQuality.index} / 5 (${airQuality.category}).`;
 }
 
 function formatAlertsSection(alerts) {

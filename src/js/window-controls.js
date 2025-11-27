@@ -1,9 +1,9 @@
-let ipcRenderer = null;
+let windowControlBridge = null;
 
 if (typeof require === "function") {
   try {
     const electron = require("electron");
-    ipcRenderer = electron?.ipcRenderer ?? null;
+    windowControlBridge = electron?.ipcRenderer ?? null;
   } catch (error) {
     console.warn("IPC renderer unavailable for window controls:", error);
   }
@@ -23,13 +23,13 @@ function updateMaximizeButton(button, isMaximized) {
 }
 
 async function handleWindowAction(action, button) {
-  if (!ipcRenderer) {
-    console.warn("window control requested without ipcRenderer:", action);
+  if (!windowControlBridge) {
+    console.warn("window control requested without IPC bridge:", action);
     return;
   }
 
   try {
-    const response = await ipcRenderer.invoke("window-control", action);
+    const response = await windowControlBridge.invoke("window-control", action);
     if (action === "toggle-maximize" && response) {
       updateMaximizeButton(button, Boolean(response.isMaximized));
     }
@@ -53,12 +53,14 @@ function initWindowControls() {
     '[data-window-action="toggle-maximize"]'
   );
 
-  if (maximizeButton && ipcRenderer) {
-    ipcRenderer.invoke("window-control", "query-maximized").then((state) => {
-      if (state) {
-        updateMaximizeButton(maximizeButton, Boolean(state.isMaximized));
-      }
-    });
+  if (maximizeButton && windowControlBridge) {
+    windowControlBridge
+      .invoke("window-control", "query-maximized")
+      .then((state) => {
+        if (state) {
+          updateMaximizeButton(maximizeButton, Boolean(state.isMaximized));
+        }
+      });
   }
 }
 

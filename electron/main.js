@@ -1,7 +1,7 @@
-require("dotenv").config();
-
-const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
+const fs = require("fs");
+const dotenv = require("dotenv");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const {
   initDatabase,
   saveUserProfile,
@@ -16,6 +16,71 @@ const {
   stopDailyDigestScheduler,
 } = require("../src/notification/scheduler");
 const { collectEnvironmentalSummary } = require("../src/notification/api");
+
+function loadEnvironmentConfiguration() {
+  const candidates = new Set([
+    path.join(__dirname, "..", ".env"),
+    path.join(process.cwd(), ".env"),
+  ]);
+
+  if (process.resourcesPath) {
+    candidates.add(path.join(process.resourcesPath, ".env"));
+  }
+
+  try {
+    const appPath = app?.getAppPath?.();
+    if (appPath) {
+      candidates.add(path.join(appPath, ".env"));
+    }
+  } catch (error) {
+    console.warn("[env] Failed to resolve app path:", error);
+  }
+
+  try {
+    const userData = app?.getPath?.("userData");
+    if (userData) {
+      candidates.add(path.join(userData, ".env"));
+    }
+  } catch (error) {
+    console.warn("[env] Failed to resolve userData path:", error);
+  }
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      dotenv.config({ path: candidate });
+      console.info(`[env] Loaded configuration from ${candidate}`);
+      return candidate;
+    }
+  }
+
+  dotenv.config();
+  console.warn(
+    "[env] No .env file found. Using process-level environment only."
+  );
+  return null;
+}
+
+function mirrorEnvToUserData(sourcePath) {
+  if (!sourcePath || !app?.isPackaged) {
+    return;
+  }
+
+  try {
+    const userDataDir = app.getPath("userData");
+    const targetPath = path.join(userDataDir, ".env");
+    if (path.resolve(sourcePath) === path.resolve(targetPath)) {
+      return;
+    }
+    if (!fs.existsSync(targetPath)) {
+      fs.copyFileSync(sourcePath, targetPath);
+      console.info(`[env] Copied configuration to ${targetPath}`);
+    }
+  } catch (error) {
+    console.warn("[env] Failed to mirror environment configuration:", error);
+  }
+}
+
+const envFilePath = loadEnvironmentConfiguration();
 
 let mainWindow;
 
@@ -57,6 +122,8 @@ app.whenReady().then(async () => {
   } catch (error) {
     console.error("[database] initialization failed:", error);
   }
+
+  mirrorEnvToUserData(envFilePath);
 
   startDailyDigestScheduler();
 
