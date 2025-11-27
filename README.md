@@ -67,7 +67,7 @@ Example Key Functions
 ## Download
 
 Access the app:
-[![EcoWatch exe](https://img.shields.io/github/v/release/Varun-Singh-Rana/Biodiversity_Project.svg?maxAge=3600&label=Biodiversity_Project-exe&labelColor=06599d&color=043b69)](https://github.com/Varun-Singh-Rana/Biodiversity_Project/releases)
+[![EcoWatch exe](https://img.shields.io/github/v/release/Varun-Singh-Rana/Biodiversity_Project.svg?maxAge=3600&label=EcoWatch-exe&labelColor=06599d&color=043b69)](https://github.com/Varun-Singh-Rana/Biodiversity_Project/releases)
 
 </div>
 
