@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const {
@@ -9,6 +11,10 @@ const {
   saveFieldData,
   listFieldData,
 } = require("./db");
+const {
+  startDailyDigestScheduler,
+  stopDailyDigestScheduler,
+} = require("../src/notification/scheduler");
 
 let mainWindow;
 
@@ -50,6 +56,8 @@ app.whenReady().then(async () => {
   } catch (error) {
     console.error("[database] initialization failed:", error);
   }
+
+  startDailyDigestScheduler();
 
   await createWindow();
 });
@@ -131,6 +139,7 @@ app.on("window-all-closed", () => {
 });
 
 app.on("before-quit", () => {
+  stopDailyDigestScheduler();
   closeDatabase().catch((error) => {
     console.error("[database] failed to close cleanly:", error);
   });
