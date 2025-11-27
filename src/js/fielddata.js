@@ -677,7 +677,27 @@ document.addEventListener("DOMContentLoaded", () => {
       setFeedback("Location auto-tagged from device sensors.", "success");
     } catch (error) {
       console.error("Geolocation lookup failed:", error);
-      setFeedback("Unable to retrieve location. Please try again.", "error");
+      let message =
+        "Unable to retrieve location. You can enter coordinates manually.";
+      if (typeof error === "object" && error !== null && "code" in error) {
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            message =
+              "Location permission denied. Allow access or enter coordinates manually.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            message =
+              "Location services unavailable. Check connection or enter coordinates manually.";
+            break;
+          case error.TIMEOUT:
+            message =
+              "Location request timed out. Try again or enter coordinates manually.";
+            break;
+          default:
+            break;
+        }
+      }
+      setFeedback(message, "error");
     } finally {
       restore();
     }
